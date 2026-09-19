@@ -176,7 +176,7 @@ window.AW = (function () {
       '<div class="fld"><label>Password</label><input id="aPass" type="password" placeholder="••••••••" autocomplete="' + (reg ? 'new-password' : 'current-password') + '"></div>' +
       '<button class="btn btn-p btn-block" onclick="AW.submitAuth()">' + ic(reg ? 'user-plus' : 'log-in') + (reg ? ' Create account' : ' Sign in') + '</button>' +
       '<div class="auth-sw">' + (reg ? 'Already have an account? <a onclick="AW.switchAuth(\'login\')">Sign in</a>' : 'New to AgricWorld? <a onclick="AW.switchAuth(\'register\')">Create account</a>') + '</div>' +
-      '<div class="auth-sw" style="font-size:.74rem">Demo: any email & password works. Try <b>admin@agricworld.ng</b> for admin access.</div>';
+      '<div class="auth-sw" style="font-size:.74rem">Demo mode: any email & password creates a local account on this device.</div>';
   }
   function setRole(r, b) { authRole = r; $$('.role-tg button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }
   function switchAuth(m) { authMode = m; renderAuth(); }
@@ -185,16 +185,16 @@ window.AW = (function () {
     if (!/^\S+@\S+\.\S+$/.test(email)) return toast('Enter a valid email address', 'circle-alert', 'err');
     if (pass.length < 4) return toast('Password must be at least 4 characters', 'circle-alert', 'err');
     var name = authMode === 'register' ? (($('#aName').value || '').trim() || email.split('@')[0]) : (state.user && state.user.email === email ? state.user.name : email.split('@')[0].replace(/[._]/g, ' '));
-    var role = /admin@/.test(email) ? 'admin' : (authMode === 'register' ? authRole : (state.user && state.user.email === email ? state.user.role : 'buyer'));
+    var role = authMode === 'register' ? authRole : (state.user && state.user.email === email ? state.user.role : 'buyer'); if (role === 'admin') role = 'buyer';
     state.user = { name: name.replace(/\b\w/g, function (c) { return c.toUpperCase(); }), email: email, role: role, joined: new Date().toISOString().slice(0, 10) };
     store('aw_user', state.user); closeAuth(); renderUserBtn();
     toast('Welcome, ' + state.user.name.split(' ')[0] + '!', 'sparkles');
-    if (role === 'admin') go('#/admin'); else if (role === 'seller' || role === 'company') go('#/seller'); else go('#/dashboard');
+    if (role === 'seller' || role === 'company') go('#/seller'); else go('#/dashboard');
   }
   function logout() { state.user = null; store('aw_user', null); renderUserBtn(); toast('Signed out', 'log-out', 'warn'); go('#/'); }
   function renderUserBtn() {
     var b = $('#userBtn'); if (!b) return;
-    if (state.user) { b.innerHTML = '<span class="avatar">' + initials(state.user.name) + '</span><span>' + esc(state.user.name.split(' ')[0]) + '</span>'; b.setAttribute('href', state.user.role === 'admin' ? '#/admin' : (state.user.role === 'buyer' ? '#/dashboard' : '#/seller')); b.onclick = null; }
+    if (state.user) { b.innerHTML = '<span class="avatar">' + initials(state.user.name) + '</span><span>' + esc(state.user.name.split(' ')[0]) + '</span>'; b.setAttribute('href', state.user.role === 'buyer' ? '#/dashboard' : '#/seller'); b.onclick = null; }
     else { b.innerHTML = '<span class="avatar">' + ic('user') + '</span><span>Sign in</span>'; b.removeAttribute('href'); b.onclick = function () { openAuth('login'); }; }
   }
   function requireUser(role) {
@@ -242,6 +242,7 @@ window.AW = (function () {
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
   function render() {
     var r = parseHash(); var fn = routes[r.name] || routes['404'];
+    if (typeof window.AW_GUARD === 'function') { var g = window.AW_GUARD(r); if (g) fn = g; }
     var main = $('#main'); var old = $('.page', main);
     document.body.classList.remove('has-hero');
     closeCart(); toggleDrawer(false); heroBg = null;
@@ -256,7 +257,7 @@ window.AW = (function () {
     if (old && !reduced) { old.classList.add('leaving'); setTimeout(doRender, 220); } else doRender();
   }
   function setActiveNav(name) {
-    var map = { home: '#/', marketplace: '#/marketplace', sectors: '#/sectors', companies: '#/companies', dashboard: '#/dashboard', seller: '#/seller', admin: '#/admin' };
+    var map = { home: '#/', marketplace: '#/marketplace', sectors: '#/sectors', companies: '#/companies', dashboard: '#/dashboard', seller: '#/seller' };
     $$('.nav a,.bnav a').forEach(function (a) { var href = a.getAttribute('href'); a.classList.toggle('active', href === (map[name] || '#/' + name) || (name === 'sector' && href === '#/sectors') || (name === 'product' && href === '#/marketplace') || (name === 'company' && href === '#/companies')); });
   }
   addEventListener('hashchange', render);
@@ -297,14 +298,14 @@ window.AW = (function () {
     $('#nav').innerHTML = [['#/', 'Home'], ['#/marketplace', 'Marketplace'], ['#/sectors', 'Sectors'], ['#/companies', 'Companies'], ['#/dashboard', 'Dashboard']].map(function (l) { return '<a href="' + l[0] + '">' + l[1] + '</a>'; }).join('');
     $('#drawer').innerHTML = '<div class="drawer-head"><div class="brand"><span class="brand-mark">' + ic('leaf') + '</span><div class="brand-txt"><span class="brand-name">AGRIC<em>WORLD</em></span><span class="brand-sub">Digital Agri Ecosystem</span></div></div><button class="icon-btn" onclick="AW.toggleDrawer(false)" aria-label="Close">' + ic('x') + '</button></div>' +
       '<div class="hdr-search" style="max-width:none;margin:0 0 10px"><span class="i lead">' + ic('search') + '</span><input class="field" id="drawerSearch" placeholder="Search products, sellers…"><div class="suggest" id="drawerSuggest"></div></div>' +
-      '<h4>Navigate</h4>' + [['#/', 'home', 'Home'], ['#/marketplace', 'store', 'Marketplace'], ['#/companies', 'building-2', 'Company Directory'], ['#/wishlist', 'heart', 'Wishlist'], ['#/dashboard', 'layout-dashboard', 'My Dashboard'], ['#/seller', 'chart-line', 'Seller Dashboard'], ['#/admin', 'shield-check', 'Admin']].map(function (l) { return '<a href="' + l[0] + '">' + ic(l[1]) + l[2] + '</a>'; }).join('') +
+      '<h4>Navigate</h4>' + [['#/', 'home', 'Home'], ['#/marketplace', 'store', 'Marketplace'], ['#/companies', 'building-2', 'Company Directory'], ['#/wishlist', 'heart', 'Wishlist'], ['#/dashboard', 'layout-dashboard', 'My Dashboard'], ['#/seller', 'chart-line', 'Seller Dashboard']].map(function (l) { return '<a href="' + l[0] + '">' + ic(l[1]) + l[2] + '</a>'; }).join('') +
       '<h4>Sectors</h4>' + D.sectors.map(function (s) { return '<a href="#/sector/' + s.id + '" class="sec-link" style="--sc:' + s.color + '">' + ic(s.icon) + s.name + '</a>'; }).join('');
     $('#drawer').addEventListener('click', function (e) { if (e.target.closest('a')) toggleDrawer(false); });
     $('#bnav').innerHTML = '<a href="#/">' + ic('home') + 'Home</a><a href="#/marketplace">' + ic('store') + 'Market</a><a href="#/sectors">' + ic('layout-grid') + 'Sectors</a><a href="#/cart" id="bnavCart" onclick="event.preventDefault();AW.openCart()">' + ic('shopping-bag') + 'Cart<span class="dot" id="bnavDot" style="display:none">0</span></a><a href="#/dashboard">' + ic('circle-user') + 'Account</a>';
     $('#footer').innerHTML = '<div class="wrap"><div class="f-grid"><div class="f-about"><div class="brand"><span class="brand-mark">' + ic('leaf') + '</span><div class="brand-txt"><span class="brand-name">AGRIC<em>WORLD</em></span><span class="brand-sub">Digital Agri Ecosystem</span></div></div><p>The premium digital marketplace connecting farmers, buyers, suppliers, processors, transporters and advisors across 22 agricultural sectors.</p><div class="socials">' + ['globe', 'send', 'share-2', 'mail'].map(function (i) { return '<a href="#" onclick="event.preventDefault();AW.toast(\'Follow us on social media\',\'share-2\')" aria-label="' + i + '">' + ic(i) + '</a>'; }).join('') + '</div></div>' +
       '<div><h5>Marketplace</h5>' + D.sectors.slice(0, 7).map(function (s) { return '<a href="#/sector/' + s.id + '">' + s.name + '</a>'; }).join('') + '</div>' +
       '<div><h5>More sectors</h5>' + D.sectors.slice(7, 14).map(function (s) { return '<a href="#/sector/' + s.id + '">' + s.name + '</a>'; }).join('') + '</div>' +
-      '<div><h5>Platform</h5><a href="#/companies">Company Directory</a><a href="#/dashboard">Buyer Dashboard</a><a href="#/seller">Seller Dashboard</a><a href="#/admin">Admin Console</a><a href="#/about">About AgricWorld</a><a href="#/contact">Contact & Support</a></div>' +
+      '<div><h5>Platform</h5><a href="#/companies">Company Directory</a><a href="#/dashboard">Buyer Dashboard</a><a href="#/seller">Seller Dashboard</a><a href="#/about">About AgricWorld</a><a href="#/contact">Contact & Support</a></div>' +
       '<div><h5>Stay updated</h5><p style="font-size:.86rem;color:var(--text-3)">Weekly market prices, new sellers and agri-insights.</p><form class="newsletter" onsubmit="event.preventDefault();AW.toast(\'Subscribed! Welcome to the AgricWorld community.\',\'mail\');this.reset()"><input type="email" required placeholder="you@farm.ng"><button class="btn btn-p btn-sm">' + ic('send') + '</button></form><div style="margin-top:16px;font-size:.84rem;color:var(--text-3)">' + ic('map-pin') + ' Lagos, Nigeria<br>' + ic('phone') + ' +234 912 648 0004<br>' + ic('mail') + ' hello@agricworld.ng</div></div></div>' +
       '<div class="f-bottom"><span>© ' + new Date().getFullYear() + ' AgricWorld. All rights reserved.</span><span>' + ic('shield-check') + ' Buyer protection · ' + ic('lock') + ' Secure payments · ' + ic('badge-check') + ' Verified sellers</span></div></div>';
     $('#cartPnl').innerHTML = '<div class="cart-h"><h3>' + ic('shopping-bag') + ' Your cart</h3><button class="icon-btn" onclick="AW.closeCart()" aria-label="Close">' + ic('x') + '</button></div><div class="cart-list" id="cartList"></div><div class="cart-f" id="cartFoot"><div class="tot"><span>Subtotal</span><span id="cartSub"></span></div><div class="tot"><span>Delivery</span><span id="cartShip"></span></div><div class="tot big"><span>Total</span><span id="cartTot"></span></div><a href="#/checkout" class="btn btn-p btn-block" onclick="AW.closeCart()">' + ic('credit-card') + ' Proceed to checkout</a></div>';

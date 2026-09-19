@@ -2,7 +2,7 @@
    AgricWorld — Data layer (sectors, products, companies, demo data)
    ═══════════════════════════════════════════════════════════════ */
 window.AW_DATA = (function () {
-  var IMG = 'assets/img/';
+  var IMG = (window.AW_BASE || '') + 'assets/img/';
 
   /* ── 22 agricultural sectors, each with its own identity ── */
   var sectors = [

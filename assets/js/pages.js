@@ -214,6 +214,19 @@
     pg.addEventListener('change', function (e) { if (e.target.name === 'pay') { $$('.pay', pg).forEach(function (l) { l.classList.toggle('on', l.contains(e.target)); }); $('#payCard').style.display = e.target.value === 'Card' ? '' : 'none'; } });
     A.placeOrder = function () {
       var btn = $('#payBtn'); btn.disabled = true; btn.innerHTML = '<span class="i" style="animation:spin 1s linear infinite">' + ic('refresh-cw') + '</span> Processing…';
+      var C = window.AW_CONFIG || {}; var method = (document.querySelector('input[name="pay"]:checked') || {}).value;
+      var total = sub + ship + fee;
+      var stripeItems = items.map(function (it) { return { name: it.p.name, unit_amount: Math.round(it.p.price * 100), quantity: it.q, currency: (C.currency || 'NGN').toLowerCase() }; });
+      /* Card payments via Stripe — the SECRET key never touches the browser. */
+      if (method === 'Card' && C.checkoutEndpoint) {
+        return fetch(C.checkoutEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: stripeItems, shipping: Math.round(ship * 100), fee: Math.round(fee * 100), email: ($('#chkEmail') || {}).value, success_url: location.origin + location.pathname + '#/dashboard/orders', cancel_url: location.href }) })
+          .then(function (r) { return r.json(); }).then(function (d) { if (d && d.url) location.href = d.url; else throw new Error(d && d.error || 'No checkout URL'); })
+          .catch(function (e) { A.toast('Card payment unavailable: ' + e.message, 'circle-alert', 'err'); btn.disabled = false; btn.innerHTML = ic('lock') + ' Pay ' + money(total); });
+      }
+      if (method === 'Card' && C.stripePaymentLink) {
+        var pl = C.stripePaymentLink + (C.stripePaymentLink.indexOf('?') > -1 ? '&' : '?') + 'client_reference_id=' + encodeURIComponent('AW-' + Date.now()) + (($('#chkEmail') || {}).value ? '&prefilled_email=' + encodeURIComponent($('#chkEmail').value) : '');
+        A.toast('Redirecting to secure Stripe checkout…', 'lock'); setTimeout(function () { location.href = pl; }, 600); return;
+      }
       setTimeout(function () {
         var id = 'AW-' + (24820 + Math.floor(Math.random() * 900));
         var orders = (function () { try { return JSON.parse(localStorage.getItem('aw_orders')) || []; } catch (e) { return []; } })();
@@ -233,7 +246,7 @@
   });
   A.route('contact', function (pg) {
     pg.setAttribute('data-title', 'Contact');
-    pg.innerHTML = '<div class="p-hero compact"><img class="bg" src="' + IMG + 'advisory-2.jpg" alt=""><div class="wrap"><h1>Contact & <em>Support</em></h1><p>We respond within 2 hours, 24/7.</p></div></div><section><div class="wrap chk"><div class="card"><h3>Send us a message</h3><form class="form" onsubmit="event.preventDefault();AW.toast(\'Message sent! We will reply within 2 hours.\',\'send\');this.reset()"><div class="fld"><label>Name</label><input required></div><div class="fld"><label>Email</label><input type="email" required></div><div class="fld full"><label>Message</label><textarea required></textarea></div><div class="full"><button class="btn btn-p">' + ic('send') + ' Send message</button></div></form></div><div class="card"><h3>Reach us</h3><div class="info-list" style="--sc:var(--brand)"><div>' + ic('phone') + '+234 912 648 0004</div><div>' + ic('mail') + 'hello@agricworld.ng</div><div>' + ic('map-pin') + 'Lagos, Nigeria</div><div>' + ic('clock') + '24/7 support</div></div></div></div></section>';
+    pg.innerHTML = '<div class="p-hero compact"><img class="bg" src="' + IMG + 'advisory-2.jpg" alt=""><div class="wrap"><h1>Contact & <em>Support</em></h1><p>We respond within 2 hours, 24/7.</p></div></div><section><div class="wrap chk"><div class="card"><h3>Send us a message</h3><form class="form" onsubmit="event.preventDefault();AW.toast(\'Message sent! We will reply within 2 hours.\',\'send\');this.reset()"><div class="fld"><label>Name</label><input required></div><div class="fld"><label>Email</label><input type="email" id="chkEmail" required></div><div class="fld full"><label>Message</label><textarea required></textarea></div><div class="full"><button class="btn btn-p">' + ic('send') + ' Send message</button></div></form></div><div class="card"><h3>Reach us</h3><div class="info-list" style="--sc:var(--brand)"><div>' + ic('phone') + '+234 912 648 0004</div><div>' + ic('mail') + 'hello@agricworld.ng</div><div>' + ic('map-pin') + 'Lagos, Nigeria</div><div>' + ic('clock') + '24/7 support</div></div></div></div></section>';
   });
   A.route404 = function (pg) { pg.setAttribute('data-title', 'Not found'); pg.innerHTML = '<div class="wrap" style="padding:80px 0"><div class="empty glass">' + ic('map') + '<h3>Page not found</h3><p>The page you are looking for has been harvested or moved.</p><a href="#/" class="btn btn-p btn-sm" style="margin-top:14px">Back home</a></div></div>'; };
   A.route('404', A.route404);

@@ -1,0 +1,14 @@
+/* Admin gate — only loaded on /admin/ */
+body.admin-locked #nav,body.admin-locked .hdr-search,body.admin-locked #cartBtn,body.admin-locked #userBtn,body.admin-locked #bnav,body.admin-locked #footer,body.admin-locked #btt,body.admin-locked #menuBtn{display:none!important}
+.gate{min-height:calc(100svh - var(--hdr-h));display:grid;place-items:center;padding:40px 16px;background:radial-gradient(60% 50% at 50% 0%,rgba(52,211,153,.18),transparent 70%),linear-gradient(180deg,#061410,#0b3d2e 60%,#04140e);color:#fff}
+.gate-card{width:100%;max-width:440px;padding:36px 32px;border-radius:28px;text-align:center;background:rgba(255,255,255,.06)!important;border:1px solid rgba(255,255,255,.14)!important;box-shadow:0 40px 80px -30px rgba(0,0,0,.7),0 0 0 1px rgba(52,211,153,.15) inset;animation:fadeUp .7s var(--ease) both}
+.gate-logo{display:flex;justify-content:center;margin-bottom:18px}.gate-logo .brand-mark{width:64px;height:64px;border-radius:20px}.gate-logo .brand-mark .i{width:30px;height:30px}
+.gate h1{font-size:1.7rem;letter-spacing:-.02em}.gate p{color:rgba(255,255,255,.7);font-size:.9rem;margin:8px 0 22px}
+.gate .form{display:grid;gap:12px;text-align:left}.gate .fld label{color:rgba(255,255,255,.7)}.gate .fld input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}.gate .fld input:focus{background:rgba(255,255,255,.12)}
+.gate-err{min-height:18px;font-size:.8rem;color:#fca5a5;font-weight:700}
+.btn-block{width:100%;justify-content:center;height:50px;grid-column:1/-1}.gate .gate-err{grid-column:1/-1}
+.gate-tools{margin-top:22px;text-align:left;font-size:.78rem;color:rgba(255,255,255,.65)}.gate-tools summary{cursor:pointer;font-weight:700;color:rgba(255,255,255,.8)}.gate-tools p{margin:8px 0;font-size:.76rem}.gate-tools code{color:#6ee7b7}
+.gate-tools input{width:100%;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;padding:0 12px;margin:6px 0;outline:none}
+.gate-tools pre{white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.35);border-radius:10px;padding:10px;margin-top:8px;font-size:.7rem;color:#6ee7b7;min-height:20px}
+.gate-back{display:inline-block;margin-top:20px;font-size:.82rem;color:rgba(255,255,255,.6)}.gate-back:hover{color:#fff}
+.gate-card.shake{animation:shake .4s var(--ease)}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
