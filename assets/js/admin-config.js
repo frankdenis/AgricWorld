@@ -1,6 +1,6 @@
 /* AgricWorld admin credentials.
    Only a salted PBKDF2-SHA256 hash is stored here — the password itself is never in the repo.
-   To change it: open /admin/ → "Generate new passphrase hash" (bottom of the sign-in card),
+   To change it: open #/admin → "Owner tools: change password" (bottom of the sign-in card),
    then paste the values below and commit. */
 window.AW_ADMIN = {
   email: 'frankdenis607@gmail.com',

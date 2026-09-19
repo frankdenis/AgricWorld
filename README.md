@@ -23,8 +23,9 @@ assets/js/app.js           core: state, router, theme, cart, auth, shell, shared
 assets/js/pages.js         public pages (home, sectors, marketplace, product, companies, checkout…)
 assets/js/config.js        public config (Stripe publishable key / payment link)
 assets/js/dashboards.js    buyer / seller dashboards + SVG charts
-assets/js/admin.js         admin console (loaded only by /admin/)
-admin/                     owner-only admin entry: gate.js (passphrase check), config.js (hash)
+assets/js/admin.js         admin console (renders only after the gate)
+assets/js/admin-gate.js    owner sign-in gate for #/admin (WebCrypto PBKDF2 verification)
+assets/js/admin-config.js  owner email + salted password hash
 server/                    optional Stripe Checkout serverless function (secret key lives here)
 assets/img/                optimised photography (sectors, heroes, backgrounds)
 assets/fonts/              Plus Jakarta Sans, Manrope (woff2)
@@ -43,11 +44,11 @@ Customers sign in with any name/email (demo mode). Picking the “Seller / Compa
 Customers never see or load the admin console.
 
 ## Admin console (owner only)
-The admin console lives at **`/admin/`** (e.g. `https://<you>.github.io/AgricWorld-/admin/`) and is not linked anywhere on the public site.
-It is protected by a passphrase: only a salted **PBKDF2-SHA256 hash** is stored in `admin/config.js`, verified in-browser with WebCrypto.
-Sessions last 8 hours; 5 wrong attempts trigger a 30-second lock.
+The admin console is at **`#/admin`** on the site (menu → Admin). Every visitor sees only the owner sign-in card.
+The console renders only after the owner's email + password are verified in-browser against a salted **PBKDF2-SHA256 hash** in `assets/js/admin-config.js` — the password itself is never stored. Normal customer sign-up can never create an admin account; forged local data or session tokens are rejected.
+Sessions last 8 hours per browser tab; 5 wrong attempts trigger a 30-second lock.
 
-**Change the passphrase:** open `/admin/` → *Generate new passphrase hash* → paste the `salt`/`hash` into `admin/config.js` → commit.
+**Change the password:** `#/admin` → *Owner tools: change password* → paste the new `salt`/`hash` into `assets/js/admin-config.js` → commit & push.
 
 ## Stripe payments
 Configure in `assets/js/config.js` (safe, public values only):
