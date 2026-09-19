@@ -295,7 +295,7 @@ window.AW = (function () {
 
   /* ── shell ── */
   function buildShell() {
-    $('#nav').innerHTML = [['#/', 'Home'], ['#/marketplace', 'Marketplace'], ['#/sectors', 'Sectors'], ['#/companies', 'Companies'], ['#/dashboard', 'Dashboard']].map(function (l) { return '<a href="' + l[0] + '">' + l[1] + '</a>'; }).join('');
+    $('#nav').innerHTML = [['#/', 'Home'], ['#/marketplace', 'Marketplace'], ['#/sectors', 'Sectors'], ['#/companies', 'Companies'], ['#/dashboard', 'Dashboard'], ['#/admin', 'Admin']].map(function (l) { return '<a href="' + l[0] + '">' + l[1] + '</a>'; }).join('');
     $('#drawer').innerHTML = '<div class="drawer-head"><div class="brand"><span class="brand-mark">' + ic('leaf') + '</span><div class="brand-txt"><span class="brand-name">AGRIC<em>WORLD</em></span><span class="brand-sub">Digital Agri Ecosystem</span></div></div><button class="icon-btn" onclick="AW.toggleDrawer(false)" aria-label="Close">' + ic('x') + '</button></div>' +
       '<div class="hdr-search" style="max-width:none;margin:0 0 10px"><span class="i lead">' + ic('search') + '</span><input class="field" id="drawerSearch" placeholder="Search products, sellers…"><div class="suggest" id="drawerSuggest"></div></div>' +
       '<h4>Navigate</h4>' + [['#/', 'home', 'Home'], ['#/marketplace', 'store', 'Marketplace'], ['#/companies', 'building-2', 'Company Directory'], ['#/wishlist', 'heart', 'Wishlist'], ['#/dashboard', 'layout-dashboard', 'My Dashboard'], ['#/seller', 'chart-line', 'Seller Dashboard'], ['#/admin', 'shield-check', 'Admin']].map(function (l) { return '<a href="' + l[0] + '">' + ic(l[1]) + l[2] + '</a>'; }).join('') +

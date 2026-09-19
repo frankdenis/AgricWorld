@@ -61,7 +61,7 @@
     btn.disabled = true; btn.innerHTML = 'Verifying…';
     pbkdf2(pass, CFG.salt || '', CFG.iterations || 120000).then(function (h) {
       var ok = email === String(CFG.email || '').toLowerCase() && constantEq(h, CFG.hash || '');
-      if (ok) { setSession(); attempts = 0; A.toast('Welcome back, owner', 'shield-check'); A.render(); return; }
+      if (ok) { setSession(); attempts = 0; closeGateModal(); A.toast('Welcome back, owner — full admin controls unlocked', 'shield-check'); A.render(); return; }
       attempts++; if (attempts >= 5) { lockedUntil = Date.now() + 30000; attempts = 0; }
       err.textContent = 'Incorrect email or password.'; btn.disabled = false; btn.innerHTML = ic('lock') + ' Unlock console';
       $('#gPass').value = ''; $('#gPass').focus();
@@ -69,13 +69,26 @@
     });
   }
 
-  /* Router guard — only the admin route is gated; everything else is untouched. */
-  window.AW_GUARD = function (r) {
-    if (r.name !== 'admin') return null;
-    if (session()) return null;
-    return function (pg) { gatePage(pg, (!CFG.hash || !CFG.salt) ? 'Admin password is not configured.' : ''); };
+  /* The admin route is PUBLIC in read-only preview mode. Any action inside the console calls
+     A.requireAdmin(); if the owner is not signed in, the sign-in card opens as a modal. */
+  A.requireAdmin = function (fn) {
+    if (session()) { if (fn) fn(); return true; }
+    openGateModal(); return false;
   };
+  A.openAdminLogin = function () { openGateModal(); };
+  function openGateModal() {
+    var ov = document.getElementById('gateOv');
+    if (!ov) { ov = document.createElement('div'); ov.id = 'gateOv'; ov.className = 'modal-ov gate-ov'; document.body.appendChild(ov); ov.addEventListener('click', function (e) { if (e.target === ov) closeGateModal(); }); }
+    var box = document.createElement('div'); ov.innerHTML = ''; ov.appendChild(box);
+    gatePage(box, (!CFG.hash || !CFG.salt) ? 'Admin password is not configured.' : '');
+    box.querySelector('.gate').classList.add('in-modal');
+    var back = box.querySelector('.gate-back'); back.textContent = 'Cancel'; back.removeAttribute('href'); back.style.cursor = 'pointer'; back.onclick = closeGateModal;
+    requestAnimationFrame(function () { ov.classList.add('open'); }); document.body.style.overflow = 'hidden';
+  }
+  function closeGateModal() { var ov = document.getElementById('gateOv'); if (ov) ov.classList.remove('open'); document.body.style.overflow = ''; }
+  A.closeAdminLogin = closeGateModal;
+  window.AW_GUARD = null;
 
   /* Owner sign-out from the admin sidebar */
-  A.adminLogout = function () { clearSession(); A.toast('Signed out of admin console', 'log-out', 'warn'); A.go('#/'); };
+  A.adminLogout = function () { clearSession(); A.toast('Signed out — console is now read-only', 'log-out', 'warn'); A.render(); };
 })(window.AW);

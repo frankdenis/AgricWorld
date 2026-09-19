@@ -43,12 +43,17 @@ python3 -m http.server 8080
 Customers sign in with any name/email (demo mode). Picking the “Seller / Company” role opens the Seller dashboard.
 Customers never see or load the admin console.
 
-## Admin console (owner only)
-The admin console is at **`#/admin`** on the site (menu → Admin). Every visitor sees only the owner sign-in card.
-The console renders only after the owner's email + password are verified in-browser against a salted **PBKDF2-SHA256 hash** in `assets/js/admin-config.js` — the password itself is never stored. Normal customer sign-up can never create an admin account; forged local data or session tokens are rejected.
-Sessions last 8 hours per browser tab; 5 wrong attempts trigger a 30-second lock.
+## Admin console
+**Admin** is in the main navigation (`#/admin`). Visitors and customers can open it and browse every screen in a
+**read-only preview** — a banner marks it as a demo view, and every action (approvals, payouts, moderation,
+broadcasts, settings, forms, toggles) opens the owner sign-in instead of executing.
 
-**Change the password:** `#/admin` → *Owner tools: change password* → paste the new `salt`/`hash` into `assets/js/admin-config.js` → commit & push.
+Only the platform owner can unlock full controls. Credentials are verified in-browser against a salted
+**PBKDF2-SHA256 hash** in `assets/js/admin-config.js` — the password itself is never stored, and normal customer
+sign-up can never create an admin account. Sessions last 8 hours per tab; 5 wrong attempts trigger a 30-second lock.
+
+**Change the password:** open the owner sign-in → *Owner tools: change password* → paste the new `salt`/`hash`
+into `assets/js/admin-config.js` → commit & push.
 
 ## Stripe payments
 Configure in `assets/js/config.js` (safe, public values only):
