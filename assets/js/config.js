@@ -8,7 +8,7 @@ window.AW_CONFIG = {
   /* A Stripe Payment Link (https://buy.stripe.com/…). Lets customers pay by card without a server.
      Create one in Stripe Dashboard → Payment Links. Leave empty to keep the demo/escrow flow only. */
   stripePaymentLink: '',
-  /* Optional: URL of your own backend/serverless function that creates Stripe Checkout Sessions
-     (this is where the SECRET key lives — on the server, never in the browser). */
+  /* Optional: set to '/api/stripe-checkout' after adding STRIPE_SECRET_KEY in Vercel → Settings → Environment Variables.
+     The secret key lives only there — on the server, never in the browser. */
   checkoutEndpoint: ''
 };

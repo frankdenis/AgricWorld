@@ -26,7 +26,8 @@ assets/js/dashboards.js    buyer / seller dashboards + SVG charts
 assets/js/admin.js         admin console (renders only after the gate)
 assets/js/admin-gate.js    owner sign-in gate for #/admin (WebCrypto PBKDF2 verification)
 assets/js/admin-config.js  owner email + salted password hash
-server/                    optional Stripe Checkout serverless function (secret key lives here)
+api/                       optional Stripe Checkout serverless function for Vercel (secret key lives in env vars)
+vercel.json · package.json Vercel configuration (static site, no build step)
 assets/img/                optimised photography (sectors, heroes, backgrounds)
 assets/fonts/              Plus Jakarta Sans, Manrope (woff2)
 .github/workflows/         GitHub Pages deployment
@@ -59,9 +60,17 @@ into `assets/js/admin-config.js` → commit & push.
 Configure in `assets/js/config.js` (safe, public values only):
 - `stripePaymentLink` – a Stripe Payment Link; card checkout redirects to Stripe hosted checkout. No server needed.
 - `stripePublishableKey` – your `pk_…` key (publishable keys are meant to be public).
-- `checkoutEndpoint` – optional URL of `server/stripe-checkout.js` deployed as a serverless function; this is the **only** place your `sk_…` secret key may exist (as an environment variable). See `server/README.md`.
+- `checkoutEndpoint` – set to `'/api/stripe-checkout'` after adding `STRIPE_SECRET_KEY` in Vercel's environment variables; that env var is the **only** place your `sk_…` secret key may exist. See `api/README.md`.
 
 > Never commit a Stripe **secret** key. A static GitHub Pages site cannot keep secrets — anything in the repo is public.
 
-## Deploy
-Push to `main` — the included workflow publishes the site to GitHub Pages (enable *Settings → Pages → Source: GitHub Actions*).
+## Deploy on Vercel (recommended)
+1. Push this repo to GitHub.
+2. [vercel.com/new](https://vercel.com/new) → **Import** the repo.
+3. Framework preset: **Other** · Build command: *(leave empty)* · Output directory: *(leave empty / root)*.
+4. **Deploy**. The site is live at `https://<project>.vercel.app` in about 30 seconds; every push to `main` redeploys.
+
+Admin: `https://<project>.vercel.app/#/admin` (owner email + password).
+
+## Deploy on GitHub Pages (alternative)
+Push to `main` and enable *Settings → Pages → Source: GitHub Actions* — the included workflow publishes the site.
