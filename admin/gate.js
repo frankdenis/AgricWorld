@@ -35,10 +35,10 @@
     main.innerHTML =
       '<div class="gate"><div class="gate-card glass">' +
       '<div class="gate-logo"><span class="brand-mark"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></span></div>' +
-      '<h1>Admin console</h1><p>Restricted area. Sign in with the owner passphrase.</p>' +
+      '<h1>Admin console</h1><p>Restricted area. Sign in with your owner email and password.</p>' +
       '<form id="gateForm" class="form" autocomplete="off">' +
       '<div class="fld full"><label>Email</label><input id="gEmail" type="email" required autocomplete="username" value="' + (CFG.email || '') + '"></div>' +
-      '<div class="fld full"><label>Passphrase</label><input id="gPass" type="password" required autocomplete="current-password" placeholder="AW-xxxxx-xxxxx-xxxxx"></div>' +
+      '<div class="fld full"><label>Passphrase</label><input id="gPass" type="password" required autocomplete="current-password" placeholder="Your password"></div>' +
       '<div class="gate-err" id="gateErr">' + (msg || '') + '</div>' +
       '<button class="btn btn-p btn-block" id="gateBtn" type="submit">Unlock console</button>' +
       '</form>' +
