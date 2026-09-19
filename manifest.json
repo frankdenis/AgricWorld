@@ -1,0 +1,12 @@
+{
+  "name": "AgricWorld — Agricultural Marketplace",
+  "short_name": "AgricWorld",
+  "description": "Everything Agriculture. One Powerful Marketplace.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#061410",
+  "theme_color": "#0f5132",
+  "icons": [
+    { "src": "assets/img/hero-main.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any" }
+  ]
+}
