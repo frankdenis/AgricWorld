@@ -1,76 +1,51 @@
 # AgricWorld — Everything Agriculture. One Powerful Marketplace.
 
-A premium, animated, fully responsive agricultural marketplace and digital ecosystem for Nigeria / Africa.
-Zero dependencies — pure HTML, CSS and vanilla JavaScript. Deploys to GitHub Pages automatically.
+A production agricultural marketplace for Nigeria: 22 sectors, real seller accounts, real product listings, real orders, real payments.
 
-## Highlights
-- **Cinematic homepage** – Ken-Burns hero, parallax, particles, animated gradient light, floating glass info cards, animated headline, live market ticker.
-- **22 sectors** – Poultry, Livestock, Fisheries, Crops, Seeds, Agrochemicals, Veterinary, Equipment, Machinery, Fertilizers, Animal Feed, Fruits & Vegetables, Farm Produce, Processing, Storage, Irrigation, Greenhouse, Agri-Tech, Logistics, Transportation, Advisory, Services — each with its own colour, icon, photography, sub-categories and themed sector page.
-- **Marketplace** – 128 curated products with real photography, sector/price/rating/stock/verified filters, sort, grid/list view, pagination, wishlist, quick-view, cart drawer, checkout with escrow flow.
-- **Company directory** – verified agribusiness profiles with products, services, followers, follow & contact.
-- **Three dashboards** – Buyer, Seller (14 sections) and Admin console (15 sections) with glass KPI cards, count-up statistics, animated SVG line/bar/donut charts, tables, chat, wallet/earnings, verification queue and settings.
-- **Light & dark theme** with animated transition, leaf loading animation, page transitions, scroll-reveal, micro-interactions, ripple buttons, toast notifications.
-- **Mobile-first** – bottom navigation, slide-in drawer, swipeable card rows, mobile dashboard tabs.
-- **Performance & accessibility** – lazy images, GPU-friendly transforms, local self-hosted fonts, `prefers-reduced-motion` respected, keyboard-friendly.
+| Layer | Technology |
+|---|---|
+| Front-end | Static HTML/CSS/JS (no build step), premium animated UI, light & dark themes, mobile layout |
+| Accounts, catalogue, orders, messages, reviews | [Supabase](https://supabase.com) (Postgres + Auth + Storage, row-level security) |
+| Payments | [Paystack](https://paystack.com) inline checkout, verified server-side before an order is marked paid |
+| Hosting | Vercel (static + one serverless function) |
 
-## Structure
+**→ Follow [SETUP.md](SETUP.md) to connect Supabase and Paystack (≈15 minutes).** Until then the site runs read-only with the built-in catalogue and clearly says accounts/checkout are not connected.
+
+## What's inside
+
 ```
 index.html                 app shell
-assets/css/app.css         design system, components, themes, responsive rules
-assets/js/icons.js         inline SVG icon set (Lucide)
-assets/js/data.js          sectors, companies, products, orders, messages (demo data)
-assets/js/app.js           core: state, router, theme, cart, auth, shell, shared cards
-assets/js/pages.js         public pages (home, sectors, marketplace, product, companies, checkout…)
-assets/js/config.js        public config (Stripe publishable key / payment link)
-assets/js/dashboards.js    buyer / seller dashboards + SVG charts
-assets/js/admin.js         admin console (renders only after the gate)
-assets/js/admin-gate.js    owner sign-in gate for #/admin (WebCrypto PBKDF2 verification)
-assets/js/admin-config.js  owner email + salted password hash
-api/                       optional Stripe Checkout serverless function for Vercel (secret key lives in env vars)
-vercel.json · package.json Vercel configuration (static site, no build step)
-assets/img/                optimised photography (sectors, heroes, backgrounds)
-assets/fonts/              Plus Jakarta Sans, Manrope (woff2)
-.github/workflows/         GitHub Pages deployment
+assets/css/app.css         design system, animations, dashboards
+assets/js/config.js        PUBLIC keys & contact details (edit this)
+assets/js/data.js          22 sectors + starter catalogue (also used by supabase/seed.sql)
+assets/js/db.js            all database/auth/storage access (Supabase)
+assets/js/app.js           router, state, theme, cart, auth modal, shared cards
+assets/js/pages.js         home, sectors, marketplace, product, companies, checkout, contact, sell, terms
+assets/js/dashboards.js    buyer account · seller dashboard · admin console (live data)
+assets/js/vendor/          supabase-js (UMD)
+assets/img/                177 real photographs
+api/paystack-verify.js     serverless payment verification (secret keys live in Vercel env)
+supabase/schema.sql        tables, RLS policies, triggers, storage bucket, stats functions
+supabase/seed.sql          optional starter catalogue
+vercel.json                static config + caching/security headers
 ```
 
-## Run locally
-Any static server works:
-```bash
-python3 -m http.server 8080
-# open http://localhost:8080
+## Roles
+
+- **Buyer** — browse, wishlist, follow, message sellers, order (Paystack or order request), review, track orders.
+- **Seller / Company** — storefront profile, product CRUD with photo upload, orders (accept → processing → shipped → delivered), buyer messages, reviews, analytics, verification request.
+- **Admin (owner)** — created automatically for the email in `owner_emails()` (`supabase/schema.sql`). Orders, verification approvals, companies (verify / assign owner / delete), products (hide / delete), users & roles, review moderation, contact inbox, subscribers CSV.
+
+## Local preview
+
+```
+python3 -m http.server 8080   # then open http://localhost:8080
 ```
 
-## Accounts
-Customers sign in with any name/email (demo mode). Picking the “Seller / Company” role opens the Seller dashboard.
-Customers never see or load the admin console.
+## Deploy
 
-## Admin console
-**Admin** is in the main navigation (`#/admin`). Visitors and customers can open it and browse every screen in a
-**read-only preview** — a banner marks it as a demo view, and every action (approvals, payouts, moderation,
-broadcasts, settings, forms, toggles) opens the owner sign-in instead of executing.
+Push to GitHub → Vercel **Import** → Framework *Other* → Deploy. Add the three environment variables from SETUP.md and redeploy.
 
-Only the platform owner can unlock full controls. Credentials are verified in-browser against a salted
-**PBKDF2-SHA256 hash** in `assets/js/admin-config.js` — the password itself is never stored, and normal customer
-sign-up can never create an admin account. Sessions last 8 hours per tab; 5 wrong attempts trigger a 30-second lock.
+## License
 
-**Change the password:** open the owner sign-in → *Owner tools: change password* → paste the new `salt`/`hash`
-into `assets/js/admin-config.js` → commit & push.
-
-## Stripe payments
-Configure in `assets/js/config.js` (safe, public values only):
-- `stripePaymentLink` – a Stripe Payment Link; card checkout redirects to Stripe hosted checkout. No server needed.
-- `stripePublishableKey` – your `pk_…` key (publishable keys are meant to be public).
-- `checkoutEndpoint` – set to `'/api/stripe-checkout'` after adding `STRIPE_SECRET_KEY` in Vercel's environment variables; that env var is the **only** place your `sk_…` secret key may exist. See `api/README.md`.
-
-> Never commit a Stripe **secret** key. A static GitHub Pages site cannot keep secrets — anything in the repo is public.
-
-## Deploy on Vercel (recommended)
-1. Push this repo to GitHub.
-2. [vercel.com/new](https://vercel.com/new) → **Import** the repo.
-3. Framework preset: **Other** · Build command: *(leave empty)* · Output directory: *(leave empty / root)*.
-4. **Deploy**. The site is live at `https://<project>.vercel.app` in about 30 seconds; every push to `main` redeploys.
-
-Admin: `https://<project>.vercel.app/#/admin` (owner email + password).
-
-## Deploy on GitHub Pages (alternative)
-Push to `main` and enable *Settings → Pages → Source: GitHub Actions* — the included workflow publishes the site.
+GPL-3.0 — see LICENSE.
