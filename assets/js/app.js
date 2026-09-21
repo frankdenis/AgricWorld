@@ -177,6 +177,8 @@ window.AW = (function () {
       '<button class="btn btn-p btn-block" onclick="AW.submitAuth()">' + ic(reg ? 'user-plus' : 'log-in') + (reg ? ' Create account' : ' Sign in') + '</button>' +
       '<div class="auth-sw">' + (reg ? 'Already have an account? <a onclick="AW.switchAuth(\'login\')">Sign in</a>' : 'New to AgricWorld? <a onclick="AW.switchAuth(\'register\')">Create account</a>') + '</div>' +
       '<div class="auth-sw" style="font-size:.74rem">Demo mode: any email & password creates a local account on this device.</div>';
+    $$('#authBody input').forEach(function (i) { i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); submitAuth(); } }); });
+    var first = $('#authBody input'); if (first && !reduced) setTimeout(function () { first.focus(); }, 80);
   }
   function setRole(r, b) { authRole = r; $$('.role-tg button').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); }
   function switchAuth(m) { authMode = m; renderAuth(); }
@@ -240,6 +242,7 @@ window.AW = (function () {
   }
   var current = null, navBusy = false;
   function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
+  function jumpTop() { var h = document.documentElement, prev = h.style.scrollBehavior; h.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); requestAnimationFrame(function () { h.style.scrollBehavior = prev; }); }
   function render() {
     var r = parseHash(); var fn = routes[r.name] || routes['404'];
     if (typeof window.AW_GUARD === 'function') { var g = window.AW_GUARD(r); if (g) fn = g; }
@@ -250,7 +253,7 @@ window.AW = (function () {
       main.innerHTML = '';
       var pg = document.createElement('div'); pg.className = 'page'; main.appendChild(pg);
       try { fn(pg, r); } catch (e) { console.error(e); pg.innerHTML = '<div class="wrap" style="padding:80px 0"><div class="empty glass"><h3>Something went wrong</h3><p>' + esc(e.message) + '</p></div></div>'; }
-      observe(pg); bindPointerFx(pg); scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      observe(pg); bindPointerFx(pg); jumpTop();
       setActiveNav(r.name); current = r;
       document.title = (pg.getAttribute('data-title') ? pg.getAttribute('data-title') + ' · ' : '') + 'AgricWorld — Premium Agricultural Marketplace';
     };
