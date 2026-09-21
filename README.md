@@ -34,7 +34,7 @@ vercel.json                static config + caching/security headers
 
 - **Buyer** — browse, wishlist, follow, message sellers, order (Paystack or order request), review, track orders.
 - **Seller / Company** — storefront profile, product CRUD with photo upload, orders (accept → processing → shipped → delivered), buyer messages, reviews, analytics, verification request.
-- **Admin (owner)** — created automatically for the email in `owner_emails()` (`supabase/schema.sql`). Orders, verification approvals, companies (verify / assign owner / delete), products (hide / delete), users & roles, review moderation, contact inbox, subscribers CSV.
+- **Admin (owner)** — created automatically for the email in `owner_emails()` (`supabase/schema.sql`). Orders, verification approvals, companies (verify / assign owner / delete), products (hide / delete), users & roles, review moderation, contact inbox, subscribers CSV. `#/admin` is publicly viewable as a **read-only preview** (public catalogue figures only, no controls); private sections and every action unlock only when the owner signs in. Regular sign-up can never produce an admin account.
 
 ## Local preview
 
