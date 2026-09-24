@@ -908,3 +908,8 @@ a.fcard:hover{transform:translateY(-4px)}
   .sh-mark .i{width:70vw;height:70vw}
 }
 @media(prefers-reduced-motion:reduce){.p-hero.full img.bg,.sh-cards .fcard,.sh-subs .chip.light,.sh-copy *{animation:none!important;opacity:1!important}}
+
+/* v3.1: Stripe return page */
+.success .ok.pulse{animation:okPulse 1.6s ease-in-out infinite}
+@keyframes okPulse{0%,100%{transform:scale(1);box-shadow:0 20px 40px -12px rgba(16,185,129,.7)}50%{transform:scale(1.06);box-shadow:0 24px 60px -10px rgba(16,185,129,.9)}}
+@media(prefers-reduced-motion:reduce){.success .ok.pulse{animation:none}}

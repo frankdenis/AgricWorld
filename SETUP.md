@@ -1,6 +1,6 @@
 # AgricWorld — Go-live setup (≈ 15 minutes)
 
-The site is a static front-end (Vercel) + **Supabase** (accounts, products, orders, messages) + **Paystack** (payments). Three keys go in one public file, three secrets go in Vercel. Nothing else to install.
+The site is a static front-end (Vercel) + **Supabase** (accounts, products, orders, messages) + **Paystack** (Nigerian payments) + **Stripe** (international cards). Three keys go in one public file, the secrets go in Vercel. Nothing else to install.
 
 ---
 
@@ -25,6 +25,19 @@ The site is a static front-end (Vercel) + **Supabase** (accounts, products, orde
    - **Secret key** (`sk_…`) → keep for step 3 (secret).
 3. Test cards for `pk_test_`: `4084 0840 8408 4081`, any future expiry, CVV `408`, PIN `0000`, OTP `123456`.
 
+## 2b · Stripe (international cards) — optional
+
+Stripe lets buyers abroad pay with Visa/Mastercard/Amex, Apple Pay and Google Pay on Stripe's hosted page. Your Stripe account must be registered in a [Stripe-supported country](https://stripe.com/global) to receive payouts (Nigeria is not supported yet — test mode still works everywhere).
+
+1. <https://dashboard.stripe.com> → **Developers → API keys** → copy the **Secret key** (`sk_test_…` / `sk_live_…`) → keep for step 3. *(The publishable key is not needed — the site uses Stripe Checkout redirect.)*
+2. **Developers → Webhooks → Add endpoint**
+   - Endpoint URL: `https://agric-world.vercel.app/api/stripe-webhook`
+   - Events: `checkout.session.completed` and `checkout.session.async_payment_succeeded`
+   - After saving, click **Reveal** under *Signing secret* → `whsec_…` → keep for step 3.
+3. If your Supabase database was created **before** Stripe support was added, run `supabase/stripe.sql` once in the SQL editor.
+4. Test card for `sk_test_`: `4242 4242 4242 4242`, any future expiry, any CVC.
+5. To hide the Stripe option, set `stripeEnabled: false` in `assets/js/config.js`. Charges are made in the order currency (`NGN`); if your Stripe account cannot present NGN, tell us and we switch the charge currency.
+
 ## 3 · Put the keys in place
 
 **Public keys** → edit `assets/js/config.js`:
@@ -41,7 +54,9 @@ contactEmail: 'frankdenis607@gmail.com',
 
 | Name | Value |
 |---|---|
-| `PAYSTACK_SECRET_KEY` | `sk_test_…` / `sk_live_…` |
+| `PAYSTACK_SECRET_KEY` | Paystack `sk_test_…` / `sk_live_…` |
+| `STRIPE_SECRET_KEY` | Stripe `sk_test_51…` / `sk_live_51…` *(optional)* |
+| `STRIPE_WEBHOOK_SECRET` | Stripe `whsec_…` *(optional, with the above)* |
 | `SUPABASE_URL` | `https://xxxx.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | the *service_role* key |
 
@@ -61,6 +76,8 @@ To add another owner email, edit `owner_emails()` in `schema.sql` and re-run jus
 | Register a seller → set up storefront → add product with a photo | Product appears in the marketplace immediately |
 | Buyer: add to cart → checkout → *Pay with Paystack* (test card) | Paystack window → success → **"Payment confirmed"** with reference; order shows *Paid* for buyer, seller and admin |
 | Close the Paystack window without paying | Message says nothing was charged; order stays *Awaiting payment* |
+| Buyer: checkout → *International card* (Stripe test card `4242…`) | Redirect to Stripe → back to **"Payment confirmed"**; order shows *Paid* with method *Stripe* |
+| Click **←** / cancel on the Stripe page | Back at checkout with "Card payment was cancelled — nothing was charged" |
 | Checkout → *Send order request* | Order appears as *Requested*; seller can Accept/Decline |
 | Product page → write a review | Rating updates on cards |
 | Contact form | Message lands in Admin → Contact inbox |
@@ -68,9 +85,12 @@ To add another owner email, edit `owner_emails()` in `schema.sql` and re-run jus
 ## Going live
 
 - Switch `paystackPublicKey` to `pk_live_…` and `PAYSTACK_SECRET_KEY` to `sk_live_…`.
+- Stripe: switch `STRIPE_SECRET_KEY` to `sk_live_…` and create the webhook again in **live** mode (new `whsec_…`).
 - Turn **Confirm email** back on in Supabase Auth.
 - Paystack settles card payments to the bank account on your Paystack business; pay sellers from there after fulfilment (the admin *Orders* screen shows what is paid and to whom it belongs).
 
 ## How payment confirmation stays honest
 
 The browser never marks an order paid. After Paystack reports success, the site calls `/api/paystack-verify`, which asks Paystack's API (with your secret key) whether that reference is a **successful charge for exactly the order total in NGN**, and only then updates the order using the service-role key. A database trigger blocks any other path to `status = 'paid'`.
+
+Stripe works the same way twice over: the amount is read from the database (never from the browser) when `/api/stripe-checkout` creates the hosted session; on return `/api/stripe-verify` retrieves the session with your secret key and checks *paid · same order · same amount · same currency*; and `/api/stripe-webhook` (signature-verified) settles the order even if the buyer never comes back.

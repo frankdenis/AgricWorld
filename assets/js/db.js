@@ -144,6 +144,18 @@ window.AW_DB = (function () {
       .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
   }
 
+  /* Stripe: the server creates a hosted Checkout Session from the order stored in the database
+     and returns the URL to redirect to. Amounts are never taken from the browser. */
+  function stripeCheckout(orderId) {
+    return fetch(C.stripeCheckoutEndpoint || '/api/stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ order_id: orderId }) })
+      .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok || !d.url) { var e = new Error(d.error || 'Could not start card payment'); e.userMessage = d.error; throw e; } return d; }); });
+  }
+  /* Stripe: confirm the session after the buyer is redirected back. */
+  function verifyStripe(sessionId, orderId) {
+    return fetch(C.stripeVerifyEndpoint || '/api/stripe-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: sessionId, order_id: orderId }) })
+      .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
+  }
+
   /* ───────────── reviews / follows / messages ───────────── */
   function reviews(productId) { if (!configured()) return Promise.resolve([]); return q(client().from('reviews').select('*').eq('product_id', productId).order('created_at', { ascending: false }).limit(20)); }
   function addReview(productId, rating, body) { var e = need(); if (e) return e; if (!profile) return fail('Sign in to review'); return q(client().from('reviews').upsert({ product_id: productId, user_id: profile.id, name: profile.name, rating: rating, body: body }, { onConflict: 'product_id,user_id' }).select().single()); }
@@ -196,7 +208,7 @@ window.AW_DB = (function () {
     configured: configured, isLive: function () { return live; }, isReady: function () { return ready; }, loadCatalogue: loadCatalogue, on: on,
     initAuth: initAuth, user: user, isAdmin: isAdmin, signUp: signUp, signIn: signIn, signOut: signOut, resetPassword: resetPassword, updatePassword: updatePassword, updateProfile: updateProfile,
     myCompany: myCompany, saveCompany: saveCompany, myProducts: myProducts, saveProduct: saveProduct, deleteProduct: deleteProduct, uploadImage: uploadImage,
-    createOrder: createOrder, myOrders: myOrders, sellerOrders: sellerOrders, setOrderStatus: setOrderStatus, getOrder: getOrder, verifyPayment: verifyPayment,
+    createOrder: createOrder, myOrders: myOrders, sellerOrders: sellerOrders, setOrderStatus: setOrderStatus, getOrder: getOrder, verifyPayment: verifyPayment, stripeCheckout: stripeCheckout, verifyStripe: verifyStripe,
     reviews: reviews, addReview: addReview, myFollows: myFollows, follow: follow, threads: threads, thread: thread, sendMessage: sendMessage, markRead: markRead,
     requestVerification: requestVerification, myVerification: myVerification, contact: contact, subscribe: subscribe,
     sellerStats: sellerStats, adminStats: adminStats, admin: admin

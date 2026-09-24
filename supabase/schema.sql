@@ -140,10 +140,10 @@ create table if not exists public.orders (
   fee           numeric(14,2) not null default 0,
   total         numeric(14,2) not null default 0,
   currency      text not null default 'NGN',
-  method        text not null default 'paystack' check (method in ('paystack','request')),
+  method        text not null default 'paystack' check (method in ('paystack','stripe','request')),
   status        text not null default 'pending_payment'
                 check (status in ('pending_payment','requested','paid','processing','shipped','delivered','cancelled','refunded')),
-  paystack_ref  text,
+  paystack_ref  text,             -- gateway reference (Paystack reference or Stripe payment_intent)
   paid_at       timestamptz,
   created_at    timestamptz not null default now()
 );

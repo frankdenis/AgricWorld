@@ -6,7 +6,7 @@ A production agricultural marketplace for Nigeria: 22 sectors, real seller accou
 |---|---|
 | Front-end | Static HTML/CSS/JS (no build step), premium animated UI, light & dark themes, mobile layout |
 | Accounts, catalogue, orders, messages, reviews | [Supabase](https://supabase.com) (Postgres + Auth + Storage, row-level security) |
-| Payments | [Paystack](https://paystack.com) inline checkout, verified server-side before an order is marked paid |
+| Payments | [Paystack](https://paystack.com) inline checkout (Nigeria) + [Stripe](https://stripe.com) hosted checkout (international cards); both verified server-side before an order is marked paid |
 | Hosting | Vercel (static + one serverless function) |
 
 **→ Follow [SETUP.md](SETUP.md) to connect Supabase and Paystack (≈15 minutes).** Until then the site runs read-only with the built-in catalogue and clearly says accounts/checkout are not connected.
@@ -24,7 +24,11 @@ assets/js/pages.js         home, sectors, marketplace, product, companies, check
 assets/js/dashboards.js    buyer account · seller dashboard · admin console (live data)
 assets/js/vendor/          supabase-js (UMD)
 assets/img/                177 real photographs
-api/paystack-verify.js     serverless payment verification (secret keys live in Vercel env)
+api/paystack-verify.js     serverless Paystack verification (secret keys live in Vercel env)
+api/stripe-checkout.js     creates a Stripe Checkout Session from the stored order
+api/stripe-verify.js       confirms the Stripe session on return
+api/stripe-webhook.js      signature-verified Stripe webhook
+api/_lib/orders.js         shared server helpers (not deployed as a function)
 supabase/schema.sql        tables, RLS policies, triggers, storage bucket, stats functions
 supabase/seed.sql          optional starter catalogue
 vercel.json                static config + caching/security headers
@@ -32,7 +36,7 @@ vercel.json                static config + caching/security headers
 
 ## Roles
 
-- **Buyer** — browse, wishlist, follow, message sellers, order (Paystack or order request), review, track orders.
+- **Buyer** — browse, wishlist, follow, message sellers, order (Paystack, Stripe or order request), review, track orders.
 - **Seller / Company** — storefront profile, product CRUD with photo upload, orders (accept → processing → shipped → delivered), buyer messages, reviews, analytics, verification request.
 - **Admin (owner)** — created automatically for the email in `owner_emails()` (`supabase/schema.sql`). Orders, verification approvals, companies (verify / assign owner / delete), products (hide / delete), users & roles, review moderation, contact inbox, subscribers CSV. `#/admin` is publicly viewable as a **read-only preview** (public catalogue figures only, no controls); private sections and every action unlock only when the owner signs in. Regular sign-up can never produce an admin account.
 
