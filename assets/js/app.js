@@ -201,8 +201,8 @@ window.AW = (function () {
     if (authMode !== 'forgot' && pass.length < 8) return authError('Password must be at least 8 characters');
     var name = authMode === 'register' ? (($('#aName') || {}).value || '').trim() : '';
     if (authMode === 'register' && name.length < 2) return authError('Enter your full name');
-    var btn = $('#authBtn'); authBusy = true; btn.disabled = true; btn.innerHTML = ic('refresh-cw') + ' Please wait…';
-    var done = function () { authBusy = false; if (btn) { btn.disabled = false; renderAuth(); } };
+    var btn = $('#authBtn'); authBusy = true; var label = btn.innerHTML; btn.disabled = true; btn.innerHTML = ic('refresh-cw') + ' Please wait…';
+    var done = function () { authBusy = false; if (btn) { btn.disabled = false; btn.innerHTML = label; } };
     var p;
     if (authMode === 'register') p = DB.signUp({ email: email, password: pass, name: name, phone: (($('#aPhone') || {}).value || '').trim(), role: authRole }).then(function (r) {
       if (r.needsConfirm) { authBusy = false; $('#authBody').innerHTML = '<div class="note ok">' + ic('mail') + ' <b>Check your inbox.</b> We sent a confirmation link to <b>' + esc(email) + '</b>. Open it to activate your account, then sign in.</div><button class="btn btn-p btn-block" onclick="AW.switchAuth(\'login\')">' + ic('log-in') + ' Go to sign in</button>'; return; }
@@ -210,7 +210,7 @@ window.AW = (function () {
     });
     else if (authMode === 'forgot') p = DB.resetPassword(email).then(function () { authBusy = false; $('#authBody').innerHTML = '<div class="note ok">' + ic('mail') + ' If an account exists for <b>' + esc(email) + '</b>, a reset link is on its way.</div><button class="btn btn-p btn-block" onclick="AW.switchAuth(\'login\')">Back to sign in</button>'; });
     else p = DB.signIn(email, pass).then(function (u) { onSignedIn(u, false); });
-    p.catch(function (e) { authError(errMsg(e).replace('Invalid login credentials', 'Incorrect email or password')); done(); });
+    p.catch(function (e) { done(); authError(errMsg(e).replace('Invalid login credentials', 'Incorrect email or password')); });
   }
   function onSignedIn(u, fresh) {
     authBusy = false; state.user = u; closeAuth(); renderUserBtn(); syncUserData();
@@ -297,9 +297,9 @@ window.AW = (function () {
     var s = D.secMap[p.sec]; var wish = state.wish.indexOf(p.id) > -1;
     var tagL = { hot: 'Bestseller', new: 'New', sale: 'Sale', premium: 'Premium' }[p.tag];
     return '<article class="pc rv" style="--sc:' + s.color + ';--d:' + Math.min(i || 0, 8) * 60 + 'ms">' +
-      '<a href="#/product/' + p.id + '" class="pc-img"><img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" width="400" height="300" onerror="this.onerror=null;this.src=\'' + D.IMG + 'bg-farm-1.jpg\'">' + (tagL ? '<span class="pc-tag ' + p.tag + '">' + tagL + '</span>' : '') + '</a>' +
+      '<div class="pc-media"><a href="#/product/' + p.id + '" class="pc-img"><img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" width="400" height="300" onerror="this.onerror=null;this.src=\'' + D.IMG + 'bg-farm-1.jpg\'">' + (tagL ? '<span class="pc-tag ' + p.tag + '">' + tagL + '</span>' : '') + '</a>' +
       '<button class="pc-fav ' + (wish ? 'on' : '') + '" data-wish="' + p.id + '" onclick="AW.toggleWish(' + p.id + ',this)" aria-label="Wishlist">' + ic('heart') + '</button>' +
-      '<div class="pc-quick"><a href="#/product/' + p.id + '" class="btn btn-w">' + ic('eye') + ' View</a><button class="btn btn-gold" onclick="AW.buyNow(' + p.id + ')">' + ic('zap') + ' Buy now</button></div>' +
+      '<div class="pc-quick"><a href="#/product/' + p.id + '" class="btn btn-w">' + ic('eye') + ' View</a><button class="btn btn-gold" onclick="AW.buyNow(' + p.id + ')">' + ic('zap') + ' Buy now</button></div></div>' +
       '<div class="pc-body"><div class="pc-cat">' + ic(s.icon) + s.name + '</div><a href="#/product/' + p.id + '" class="pc-name">' + esc(p.name) + '</a>' +
       '<div class="pc-seller"><span class="mini">' + initials(p.seller) + '</span><span>' + esc(p.seller) + '</span>' + (p.ver ? '<span class="ver">' + ic('badge-check') + '</span>' : '') + '</div>' +
       '<div class="pc-loc">' + ic('map-pin') + esc(p.loc) + '</div>' +
@@ -347,6 +347,14 @@ window.AW = (function () {
     $('#hdrSearchIcon').innerHTML = ic('search');
     bindSearch($('#hdrSearch'), $('#hdrSuggest')); bindSearch($('#drawerSearch'), $('#drawerSuggest'));
     renderUserBtn(); renderCartBadge();
+    /* header / overlay controls */
+    $('#themeBtn').addEventListener('click', toggleTheme);
+    $('#cartBtn').addEventListener('click', openCart);
+    $('#menuBtn').addEventListener('click', function () { toggleDrawer(); });
+    $('#drawerOv').addEventListener('click', function () { toggleDrawer(false); });
+    $('#cartOv').addEventListener('click', closeCart);
+    $('#btt').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); });
+    $('#userBtn').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#userBtn').click(); } });
     document.addEventListener('keydown', function (e) { if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); ($('#hdrSearch') || {}).focus && $('#hdrSearch').focus(); } if (e.key === 'Escape') { closeCart(); closeAuth(); toggleDrawer(false); } });
   }
 
