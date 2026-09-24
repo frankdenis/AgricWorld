@@ -141,19 +141,19 @@ window.AW_DB = (function () {
      Paystack's API using the SECRET key and marks the order paid with the service-role key. */
   function verifyPayment(reference, orderId) {
     return fetch(C.verifyEndpoint || '/api/paystack-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: reference, order_id: orderId }) })
-      .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
+      .then(function (r) { return r.json().catch(function () { var e = new Error('The payment server did not respond correctly. Please try again in a moment.'); e.userMessage = e.message; throw e; }).then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
   }
 
   /* Stripe: the server creates a hosted Checkout Session from the order stored in the database
      and returns the URL to redirect to. Amounts are never taken from the browser. */
   function stripeCheckout(orderId) {
     return fetch(C.stripeCheckoutEndpoint || '/api/stripe-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ order_id: orderId }) })
-      .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok || !d.url) { var e = new Error(d.error || 'Could not start card payment'); e.userMessage = d.error; throw e; } return d; }); });
+      .then(function (r) { return r.json().catch(function () { var e = new Error('The payment server did not respond correctly. Please try again in a moment.'); e.userMessage = e.message; throw e; }).then(function (d) { if (!r.ok || !d.ok || !d.url) { var e = new Error(d.error || 'Could not start card payment'); e.userMessage = d.error; throw e; } return d; }); });
   }
   /* Stripe: confirm the session after the buyer is redirected back. */
   function verifyStripe(sessionId, orderId) {
     return fetch(C.stripeVerifyEndpoint || '/api/stripe-verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: sessionId, order_id: orderId }) })
-      .then(function (r) { return r.json().then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
+      .then(function (r) { return r.json().catch(function () { var e = new Error('The payment server did not respond correctly. Please try again in a moment.'); e.userMessage = e.message; throw e; }).then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
   }
 
   /* ───────────── reviews / follows / messages ───────────── */

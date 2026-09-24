@@ -161,8 +161,8 @@ h1,h2,h3,h4{line-height:1.12;letter-spacing:-.02em;font-weight:800}
 /* ═══ LAYOUT ═══ */
 .wrap{max-width:1440px;margin:0 auto;padding:0 24px}
 main{min-height:70vh;overflow-x:clip}
-.page{animation:pageIn .65s var(--ease) both}
-.page.leaving{animation:pageOut .3s var(--ease-2) both}
+.page{animation:pageIn .45s var(--ease) both}
+.page.leaving{animation:pageOut .2s var(--ease-2) both}
 @keyframes pageIn{from{opacity:0;transform:translateY(22px) scale(.992);filter:blur(6px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes pageOut{to{opacity:0;transform:translateY(-10px) scale(.995);filter:blur(4px)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
@@ -913,3 +913,23 @@ a.fcard:hover{transform:translateY(-4px)}
 .success .ok.pulse{animation:okPulse 1.6s ease-in-out infinite}
 @keyframes okPulse{0%,100%{transform:scale(1);box-shadow:0 20px 40px -12px rgba(16,185,129,.7)}50%{transform:scale(1.06);box-shadow:0 24px 60px -10px rgba(16,185,129,.9)}}
 @media(prefers-reduced-motion:reduce){.success .ok.pulse{animation:none}}
+
+/* v3.2: speed & touch response */
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+a,button,label,input,select,textarea,.pc,.sc-card,.chip,.pay,.fcard,.co-card,.bnav a{touch-action:manipulation}
+.btn,.chip,.pay,.icon-btn,.bnav a{-webkit-user-select:none;user-select:none}
+.btn:active,.chip:active,.pay:active,.icon-btn:active{transform:scale(.96);transition-duration:.08s}
+.pc:active,.sc-card:active,.co-card:active{transform:scale(.985);transition-duration:.1s}
+.pc,.co-card{content-visibility:auto;contain-intrinsic-size:auto 380px}
+footer{content-visibility:auto;contain-intrinsic-size:auto 640px}
+img{-webkit-touch-callout:none}
+@media(hover:none){
+  .pc:hover,.sc-card:hover,.co-card:hover{transform:none}
+  .hdr,.drawer,.suggest,.cart-pnl,.auth,.bnav{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .blob{filter:blur(40px)}
+}
+@media(max-width:640px){
+  .page{animation-duration:.3s}
+  @keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes pageOut{to{opacity:0;transform:translateY(-6px)}}
+}

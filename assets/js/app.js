@@ -285,7 +285,7 @@ window.AW = (function () {
       setActiveNav(r.name); current = r;
       document.title = (pg.getAttribute('data-title') ? pg.getAttribute('data-title') + ' · ' : '') + 'AgricWorld — Premium Agricultural Marketplace';
     };
-    if (old && !reduced) { old.classList.add('leaving'); setTimeout(doRender, 220); } else doRender();
+    if (old && !reduced) { old.classList.add('leaving'); setTimeout(doRender, 150); } else doRender();
   }
   function setActiveNav(name) {
     var map = { home: '#/', marketplace: '#/marketplace', sectors: '#/sectors', companies: '#/companies', dashboard: '#/dashboard', seller: '#/seller', admin: '#/admin', sell: '#/sell' };
@@ -359,6 +359,21 @@ window.AW = (function () {
   }
 
   function subscribe(f) { var e = f.e.value.trim(); var b = f.querySelector('button'); b.disabled = true; DB.subscribe(e).then(function () { toast('Subscribed — welcome to AgricWorld', 'mail'); f.reset(); }).catch(function (er) { toast(errMsg(er), 'circle-alert', 'err'); }).then(function () { b.disabled = false; }); }
+  /* ── service worker: instant reloads (cached shell + images), update toast ── */
+  function registerSW() {
+    if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
+    if (location.hostname !== 'localhost' && location.protocol !== 'https:') return;
+    var told = false;
+    navigator.serviceWorker.addEventListener('message', function (ev) { if (ev.data && ev.data.type === 'aw-update' && !told) { told = true; toast('A newer version is ready — reload to update', 'refresh-cw'); } });
+    navigator.serviceWorker.register('sw.js').then(function (reg) {
+      reg.addEventListener('updatefound', function () {
+        var nw = reg.installing; if (!nw) return;
+        nw.addEventListener('statechange', function () {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller && !told) { told = true; toast('A newer version is ready — reload to update', 'refresh-cw'); }
+        });
+      });
+    }).catch(function () { });
+  }
   var booted = false;
   function init() {
     applyTheme(state.theme, false);
@@ -371,7 +386,8 @@ window.AW = (function () {
       if (!location.hash) location.hash = '#/';
       booted = true; render();
       addEventListener('hashchange', render);
-      setTimeout(function () { $('#loader').classList.add('hide'); }, Math.max(0, (reduced ? 100 : 1200) - (Date.now() - t0)));
+      setTimeout(function () { $('#loader').classList.add('hide'); }, Math.max(0, (reduced ? 60 : (sessionStorage.getItem('aw_seen') ? 250 : 650)) - (Date.now() - t0))); try { sessionStorage.setItem('aw_seen', '1'); } catch (e) { }
+      registerSW();
     });
   }
   document.addEventListener('DOMContentLoaded', init);
