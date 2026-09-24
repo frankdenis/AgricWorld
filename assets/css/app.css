@@ -593,7 +593,10 @@ footer{margin-top:60px;padding:64px 0 100px;position:relative;background:linear-
 .ci img{width:76px;height:64px;object-fit:cover;border-radius:12px}
 .ci b{display:block;font-size:.9rem;line-height:1.3}
 .ci small{color:var(--text-3);font-size:.76rem}
-.ci .q{display:inline-flex;align-items:center;gap:4px;margin-top:6px}
+.ci small{display:block;color:var(--text-3);font-size:.78rem;margin-top:2px}
+.ci .q{display:inline-flex;align-items:center;gap:4px;margin-top:8px}
+#cartPage .ci{grid-template-columns:96px 1fr auto;padding:16px 0}#cartPage .ci img{width:96px;height:80px}#cartPage .ci b{font-size:1rem}
+@media(max-width:640px){#cartPage .ci{grid-template-columns:70px 1fr auto;gap:10px}#cartPage .ci img{width:70px;height:60px}#cartPage .ci b{font-size:.9rem}}
 .ci .q button{width:26px;height:26px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center}
 .ci .q button:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
 .ci .q span{min-width:24px;text-align:center;font-weight:800;font-size:.85rem}

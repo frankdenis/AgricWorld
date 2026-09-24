@@ -329,5 +329,16 @@
   });
   A.route404 = function (pg) { pg.setAttribute('data-title', 'Not found'); pg.innerHTML = '<div class="wrap" style="padding:80px 0"><div class="empty glass">' + ic('map') + '<h3>Page not found</h3><p>The page you are looking for has been harvested or moved.</p><a href="#/" class="btn btn-p btn-sm" style="margin-top:14px">Back home</a></div></div>'; };
   A.route('404', A.route404);
-  A.route('cart', function (pg) { A.route404(pg); setTimeout(A.openCart, 50); });
+  A.route('cart', function (pg) {
+    pg.setAttribute('data-title', 'Your cart');
+    var items = A.state.cart.map(function (c) { return { p: D.products.find(function (x) { return x.id === c.id; }), q: c.q }; }).filter(function (x) { return x.p; });
+    var sub = A.cartTotal();
+    var sellers = {}; items.forEach(function (it) { sellers[it.p.co] = 1; });
+    pg.innerHTML = '<div class="p-hero compact"><img class="bg" src="' + IMG + 'hero-market.jpg" alt=""><div class="wrap"><h1>Your <em>cart</em></h1><p>' + (items.length ? A.cartCount() + ' item' + (A.cartCount() === 1 ? '' : 's') + ' from ' + Object.keys(sellers).length + ' seller' + (Object.keys(sellers).length === 1 ? '' : 's') : 'Nothing here yet') + '</p></div></div>' +
+      '<section><div class="wrap">' + (items.length ?
+        '<div class="chk"><div class="card rv"><h3>' + ic('shopping-bag') + ' Items</h3><div id="cartPage">' + items.map(function (it, i) { var p = it.p; return '<div class="ci" style="--d:' + (i * 60) + 'ms"><a href="#/product/' + p.id + '"><img src="' + esc(p.img) + '" alt="" loading="lazy"></a><div><a href="#/product/' + p.id + '"><b>' + esc(p.name) + '</b></a><small>' + esc(p.seller) + ' · ' + money(p.price) + esc(p.unit) + (p.moq > 1 ? ' · min. ' + p.moq : '') + '</small><div class="q"><button onclick="AW.setQty(' + p.id + ',' + (it.q - 1) + ');AW.render()" aria-label="Decrease">' + ic('minus') + '</button><span>' + it.q + '</span><button onclick="AW.setQty(' + p.id + ',' + (it.q + 1) + ');AW.render()" aria-label="Increase">' + ic('plus') + '</button></div></div><div><div class="pr">' + money(p.price * it.q) + '</div><button class="rm" onclick="AW.removeFromCart(' + p.id + ');AW.render()" aria-label="Remove">' + ic('trash-2') + '</button></div></div>'; }).join('') + '</div><a href="#/marketplace" class="btn btn-ghost btn-sm" style="margin-top:16px">' + ic('arrow-left') + ' Continue shopping</a></div>' +
+        '<aside class="summary-sticky"><div class="card rv" style="--d:120ms"><h3>' + ic('receipt-text') + ' Summary</h3><div class="tot"><span>Subtotal</span><span>' + money(sub) + '</span></div><div class="tot"><span>Delivery</span><span style="font-size:.8rem">Arranged with seller</span></div><div class="tot big"><span>Total</span><span>' + money(sub) + '</span></div><a href="#/checkout" class="btn btn-gold btn-block" style="margin-top:14px">' + ic('credit-card') + ' Proceed to checkout</a><p style="font-size:.76rem;color:var(--text-3);text-align:center;margin-top:12px">' + ic('lock') + ' Pay securely with Paystack or send an order request</p></div></aside></div>'
+        : '<div class="empty glass" style="max-width:560px;margin:0 auto">' + ic('shopping-bag') + '<h3>Your cart is empty</h3><p>Browse 22 sectors of real listings from verified farmers and agri-businesses.</p><a href="#/marketplace" class="btn btn-p" style="margin-top:16px">' + ic('store') + ' Explore marketplace</a></div>') + '</div></section>';
+    A.observe(pg);
+  });
 })(window.AW);
