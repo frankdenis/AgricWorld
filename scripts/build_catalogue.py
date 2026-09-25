@@ -8,8 +8,8 @@ Usage: python3 scripts/build_catalogue.py [--pool /tmp/pool]
 import json, os, re, random, subprocess, sys, hashlib, shutil
 from PIL import Image
 sys.path.insert(0, os.path.dirname(__file__))
-from spec_a import SPEC_A; from spec_b import SPEC_B; from spec_c import SPEC_C
-SPEC = {**SPEC_A, **SPEC_B, **SPEC_C}
+from spec_a import SPEC_A; from spec_b import SPEC_B; from spec_c import SPEC_C; from spec_d import SPEC_D
+SPEC = {**SPEC_A, **SPEC_B, **SPEC_C, **SPEC_D}
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POOL = sys.argv[sys.argv.index('--pool') + 1] if '--pool' in sys.argv else '/var/tmp/pool'
 random.seed(20260924)
@@ -94,6 +94,10 @@ TYPES = {
  'transport': ['Haulage', 'Transport Ltd', 'Trucking', 'Agro Haulage', 'Logistics', 'Motors', 'Truck Services', 'Fleet Services'],
  'advisory': ['Agro Consult', 'Advisory Services', 'Agribusiness Consulting', 'Farm Advisory', 'Agro Insurance Brokers', 'Agric Finance', 'Extension Services', 'Agro Academy'],
  'services': ['Farm Services', 'Agro Services', 'Land Services', 'Farm Contractors', 'Agro Works', 'Farm Solutions', 'Rural Works', 'Agro Estates'],
+ 'forestry': ['Timber Company', 'Forestry Ltd', 'Plantations', 'Woodlands', 'Tree Nursery', 'Forest Products', 'Agroforestry', 'Sawmills'],
+ 'beekeeping': ['Apiaries', 'Bee Farm', 'Honey Company', 'Apiculture', 'Bee Works', 'Honey Farms', 'Beekeepers', 'Hive & Honey'],
+ 'manufacturing': ['Agro Machines', 'Fabrication Works', 'Agro Industries', 'Engineering Ltd', 'Agro Manufacturing', 'Machine Works', 'Industrial Ltd', 'Agro Equipment Mfg'],
+ 'education': ['Agric Academy', 'Farm Institute', 'Agro Training Centre', 'Research Centre', 'Agric College', 'Extension Services', 'Agri Labs', 'Agro Learning Hub'],
 }
 DESC = {
  'poultry': ['{name} runs a {size} integrated poultry operation in {city} supplying {p1}, {p2} and {p3} to farmers and retailers across {region}.', 'Family-owned since {year}, {name} specialises in {p1} and {p2} with strict biosecurity and full vaccination records.'],
@@ -120,7 +124,7 @@ def new_company(sec, subs, cover_pool, n):
     desc = tmpl.format(name=name, size=size, city=city, region=REGION.get(state, 'Nigeria'), year=year, p1=ps[0].lower(), p2=ps[1 % len(ps)].lower(), p3=ps[2 % len(ps)].lower(), sector=sec_names[sec]['name'].lower())
     cover = None  # assigned after products so covers don't steal product photos
     phone = f"+234 {random.choice(['803', '805', '806', '807', '808', '810', '812', '813', '814', '816', '703', '705', '706', '708', '709', '902', '903', '905', '906', '907', '908', '915'])} {random.randint(100, 999)} {random.randint(1000, 9999)}"
-    return {'id': cid, 'name': name, 'sector': sec, 'loc': f'{city}, {state}', 'ver': random.random() < 0.62, 'year': year, 'staff': staff, 'desc': desc, 'products': ps, 'services': random.sample(['Delivery', 'Consultancy', 'Installation', 'Training', 'After-sales support', 'Bulk supply', 'Farm visits', 'Financing options', 'Export packing', 'Warranty'], 3), 'cover': cover, 'phone': phone, 'email': f"info@{cid.replace('-', '')[:18]}.ng", 'whatsapp': '234' + phone[5:].replace(' ', '')}
+    return {'id': cid, 'name': name, 'sector': sec, 'loc': f'{city}, {state}', 'ver': False, 'year': year, 'staff': staff, 'desc': desc, 'products': ps, 'services': random.sample(['Delivery', 'Consultancy', 'Installation', 'Training', 'After-sales support', 'Bulk supply', 'Farm visits', 'Financing options', 'Export packing', 'Warranty'], 3), 'cover': cover, 'phone': phone, 'email': f"info@{cid.replace('-', '')[:18]}.ng", 'whatsapp': '234' + phone[5:].replace(' ', '')}
 
 for s in sectors:
     sec = s['id']; subs = list(SPEC[sec].keys())
@@ -144,13 +148,22 @@ def guess_sub(p):
 for p in products:
     if not p.get('sub'): p['sub'] = guess_sub(p)
 pid = 1000
+taken_primary = set()
+def pkey(x): return wm_path(x) or x['file']
+# hand-authored products: if two share a primary photo, give the later one its own Commons photo from its sub-category
+for bp in base_products:
+    img = bp.get('img')
+    if isinstance(img, str) and img in taken_primary:
+        cands = [x for x in pool_for(bp['sec'], bp['sub']) if pkey(x) not in taken_primary] or [x for x in sector_pool(bp['sec']) if pkey(x) not in taken_primary]
+        if cands:
+            x = cands[0]; taken_primary.add(pkey(x)); bp['img'] = place_photo(x, bp['sec'], bp['sub'])
+            bp['gal'] = [bp['img']] + [g for g in (bp.get('gal') or []) if g != img]
+            continue
+    if isinstance(img, str): taken_primary.add(img)
 TAGS = ['hot', 'new', 'sale', None, None, None, None, None]
 for s in sectors:
     sec = s['id']
     for sub, items in SPEC[sec].items():
-        photos = pool_for(sec, sub)                      # already sorted best-first by clip_filter
-        if len(photos) < 14:                             # thin sub: borrow from the rest of the sector (best-scored first)
-            extra = sorted([x for x in sector_pool(sec) if x not in photos], key=lambda x: -x.get('score', 0)); photos = photos + extra[:14 - len(photos) + 6]
         # expand items -> offers first so photos can be assigned uniquely
         offers_list = []
         for (name, unit, price, moq, delivery, desc, specs, variants) in items:
@@ -159,15 +172,29 @@ for s in sectors:
                 pname = (name if not label else name + ' ' + label).replace('  ', ' ').strip()
                 n_off = 1 + (1 if random.random() < 0.55 else 0) + (1 if random.random() < 0.18 else 0)
                 # bulk variants (truckload / 600 bags / 500 pcs…) are priced per lot, not per bag
-                v_unit, v_moq = (('/lot', 1) if label and vprice >= price * 20 else (unit, moq))
+                v_unit, v_moq = (('/lot', 1) if label and price > 0 and vprice >= price * 20 else (unit, moq))
                 for o in range(n_off): offers_list.append((pname, v_unit, vprice, v_moq, delivery, desc, specs, o))
         n = len(offers_list)
-        primaries = photos[:n]; extras = photos[n:] or photos
+        # every listing gets its own photo: never reuse a primary photo anywhere on the site
+        photos = [x for x in pool_for(sec, sub) if pkey(x) not in taken_primary]   # best-first (clip_filter order)
+        if len(photos) < n + 4:                          # thin sub: borrow unused photos from the rest of the sector (best-scored first)
+            extra = sorted([x for x in sector_pool(sec) if x not in photos and pkey(x) not in taken_primary], key=lambda x: -x.get('score', 0))
+            photos = photos + extra[:n + 4 - len(photos)]
+        if len(photos) < n:                              # still short: drop duplicate offers rather than reuse a photo
+            keep_n = max(len(photos), 1)
+            firsts = [o for o in offers_list if o[7] == 0]; rest = [o for o in offers_list if o[7] != 0]
+            offers_list = (firsts + rest)[:keep_n]; n = len(offers_list)
+        primaries = photos[:n]; extras = photos[n:] or pool_for(sec, sub) or photos
+        for x in primaries: taken_primary.add(pkey(x))
         rr_extra = RoundRobin(extras)
         sellers = RoundRobin(random.sample(co_by_sec[sec], len(co_by_sec[sec])))
         for i, (pname, unit, vprice, moq, delivery, desc, specs, o) in enumerate(offers_list):
             ph = primaries[i % len(primaries)] if primaries else None
-            img = place_photo(ph, sec, sub) if ph else s['img']
+            if ph: img = place_photo(ph, sec, sub)
+            else:                                        # pool exhausted: use a local sector photo nobody else uses as a primary
+                loc = [f'assets/img/{f}' for f in sorted(os.listdir(os.path.join(ROOT, 'assets/img'))) if f.startswith(sec + '-')]
+                free = [f for f in loc if f not in taken_primary and f != s['img'] and f != s['hero']] or [f for f in loc if f != s['img']] or [s['img']]
+                img = free[0]; taken_primary.add(img)
             gal = [img]
             tries = 0
             while len(gal) < 3 and tries < 6:
@@ -178,19 +205,32 @@ for s in sectors:
             pid += 1; co = sellers.next()
             p_price = vprice if o == 0 else round(vprice * random.uniform(0.95, 1.08) / (10 if vprice < 10000 else 100)) * (10 if vprice < 10000 else 100)
             tag = random.choice(TAGS) if o == 0 else None
-            old = round(p_price * random.uniform(1.06, 1.18) / 10) * 10 if tag == 'sale' else None
+            if p_price <= 0: p_price = 0; tag = None
+            old = round(p_price * random.uniform(1.06, 1.18) / 10) * 10 if tag == 'sale' and p_price > 0 else None
             products.append({'id': pid, 'sec': sec, 'sub': sub, 'name': pname, 'price': p_price, 'unit': unit, 'old': old, 'co': co['id'], 'img': img, 'gal': gal, 'tag': tag, 'stock': 'in', 'moq': moq, 'delivery': delivery, 'desc': desc, 'specs': specs})
 
 # company covers from photos not used by products
+taken_cover = set(c.get('cover') for c in companies if isinstance(c.get('cover'), str))
 for sec in co_by_sec:
-    sp = [x for x in sector_pool(sec) if x['file'] not in used_files]; random.shuffle(sp); rr = RoundRobin(sp)
+    sp = [x for x in sector_pool(sec) if x['file'] not in used_files]; random.shuffle(sp)
+    spare = [x for x in sector_pool(sec) if x['file'] in used_files]; random.shuffle(spare)
+    queue = [x for x in sp + spare if pkey(x) not in taken_cover]   # unique cover per company site-wide; unused photos first
     for c in co_by_sec[sec]:
         if c.get('cover'): continue
-        x = rr.next(); c['cover'] = place_photo(x, sec, 'cover', maxw=1000, q=52) if x else sec_names[sec]['img']
+        x = queue.pop(0) if queue else None
+        if x: taken_cover.add(pkey(x))
+        c['cover'] = place_photo(x, sec, 'cover', maxw=1000, q=52) if x else sec_names[sec]['img']
 
-# sector galleries (6 photos each) for the sector page
+# sector galleries (6 photos each) for the sector page; sectors without local artwork take their card/hero photos from the pool
 for s in sectors:
     sp = [x for x in sector_pool(s['id']) if x['file'] not in used_files] or sector_pool(s['id']); random.shuffle(sp)
+    if s.get('img') == 'pool' or s.get('hero') == 'pool':
+        best = sorted(sector_pool(s['id']), key=lambda x: -x.get('score', 0))
+        wide = [x for x in best if x.get('w', 0) >= 1200] or best
+        if wide:
+            if s.get('hero') == 'pool': s['hero'] = place_photo(wide[0], s['id'], 'hero', maxw=1920, q=60)
+            if s.get('img') == 'pool': s['img'] = place_photo((wide[1:] or wide)[0], s['id'], 'card', maxw=960, q=58)
+        sp = [x for x in sp if x is not (wide[0] if wide else None)]
     s['gallery'] = [place_photo(x, s['id'], 'gallery', maxw=880, q=56) for x in sp[:6]]
     s['subs'] = list(SPEC[s['id']].keys())
 

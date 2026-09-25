@@ -8,7 +8,7 @@ The site is a static front-end (Vercel) + **Supabase** (accounts, products, orde
 
 1. Go to <https://supabase.com> → **New project**. Name: `agricworld`, region: closest to Nigeria (e.g. *West EU / London*). Save the database password somewhere safe.
 2. Left menu → **SQL Editor** → **New query** → paste the whole of `supabase/schema.sql` → **Run**. (Creates all tables, security rules, storage bucket and the owner rule.)
-3. *(Optional)* Same place, paste `supabase/seed.sql` → **Run** to launch with the full starter catalogue (200+ companies, 1,200+ listings across all 22 sectors, each with real photography). Skip it for an empty marketplace. If your database was created before the XXL catalogue, run `supabase/catalogue.sql` first (adds the sub-category column).
+3. *(Optional)* Same place, paste `supabase/seed.sql` → **Run** to launch with the full starter catalogue (200+ companies, 1,200+ listings across all 26 sectors, each with real photography). Skip it for an empty marketplace. If your database was created before the XXL catalogue, run `supabase/catalogue.sql` first (adds the sub-category column).
 4. Left menu → **Authentication → Providers → Email**: keep *Enable email provider* ON.
    - For instant sign-ups without email confirmation, turn **Confirm email** OFF. (Turn it back on later for production.)
 5. **Authentication → URL Configuration**: set *Site URL* to your live URL (e.g. `https://agricworld.vercel.app`) and add the same URL under *Redirect URLs*.
@@ -35,6 +35,7 @@ Stripe lets buyers abroad pay with Visa/Mastercard/Amex, Apple Pay and Google Pa
    - Events: `checkout.session.completed` and `checkout.session.async_payment_succeeded`
    - After saving, click **Reveal** under *Signing secret* → `whsec_…` → keep for step 3.
 3. If your Supabase database was created **before** Stripe support was added, run `supabase/stripe.sql` once in the SQL editor.
+4. **Verified Business Program:** run `supabase/verification.sql` once in the SQL editor. It creates the `verification_tiers`, `verification_applications` and `verification_payments` tables. Tier names, prices, application fees, durations and renewal prices are all edited by the owner in **Admin → Verification tiers** — nothing is hard-coded, and paying a fee never grants the badge automatically (the owner approves every application).
 4. Test card for `sk_test_`: `4242 4242 4242 4242`, any future expiry, any CVC.
 5. To hide the Stripe option, set `stripeEnabled: false` in `assets/js/config.js`. Charges are made in the order currency (`NGN`); if your Stripe account cannot present NGN, tell us and we switch the charge currency.
 

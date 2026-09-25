@@ -20,6 +20,7 @@ window.AW_CONFIG = {
   /* Serverless endpoint that verifies a payment with Paystack before an order is marked paid.
      Deployed automatically with the site on Vercel (api/paystack-verify.js). */
   verifyEndpoint: '/api/paystack-verify',
+  verificationPayEndpoint: '/api/verification-pay',
 
   /* ── Stripe (international cards, Apple Pay / Google Pay) ──
      Nothing secret goes here: the buyer is redirected to Stripe's hosted page by

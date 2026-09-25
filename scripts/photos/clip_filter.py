@@ -6,7 +6,7 @@ import json, os, sys, numpy as np, torch, open_clip
 from PIL import Image
 POOL = '/var/tmp/pool'
 Q = json.load(open('/home/user/tools/queries.json'))
-idx = json.load(open('/home/user/tools/pool_index.json'))
+idx = json.load(open(os.environ.get('INDEX', '/home/user/tools/pool_index.json')))
 MINP = float(sys.argv[sys.argv.index('--min') + 1]) if '--min' in sys.argv else 0.5
 MINC = float(sys.argv[sys.argv.index('--cos') + 1]) if '--cos' in sys.argv else 0.25
 NEG = ["a scanned document or page of text", "a map", "a diagram, chart or infographic", "a city skyline with buildings", "a street with cars and traffic",
@@ -80,7 +80,7 @@ for sec, subs in idx.items():
             if ok: keep.append(it)
         keep.sort(key=lambda x: -x['score'])
         clean[sec][sub] = keep; stats[(sec, sub)] = (len(lst), len(keep))
-json.dump(clean, open('/home/user/tools/index_clean.json', 'w'))
+json.dump(clean, open(os.environ.get('OUT', '/home/user/tools/index_clean.json'), 'w'))
 tot_in = sum(a for a, b in stats.values()); tot_out = sum(b for a, b in stats.values())
 print(f'kept {tot_out}/{tot_in}')
 for (sec, sub), (a, b) in stats.items():

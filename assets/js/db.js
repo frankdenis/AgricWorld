@@ -24,7 +24,7 @@ window.AW_DB = (function () {
 
   /* ───────────── catalogue (read) ───────────── */
   function normCompany(c) {
-    return { id: c.id, name: c.name, sector: c.sector, loc: c.loc || '', ver: !!c.ver, year: c.year || '', staff: c.staff || '', desc: c.descr || '', products: c.products || [], services: c.services || [], cover: c.cover || '', phone: c.phone || '', email: c.email || '', whatsapp: c.whatsapp || '', owner_id: c.owner_id || null, followers: 0, rating: 0, reviews: 0 };
+    return { id: c.id, name: c.name, sector: c.sector, loc: c.loc || '', ver: !!c.ver, year: c.year || '', staff: c.staff || '', desc: c.descr || '', products: c.products || [], services: c.services || [], cover: c.cover || '', phone: c.phone || '', email: c.email || '', whatsapp: c.whatsapp || '', owner_id: c.owner_id || null, followers: 0, rating: 0, reviews: 0, logo: c.logo || '', website: c.website || '', socials: c.socials || {}, country: c.country || 'Nigeria', state: c.state || '', city: c.city || '', btype: c.btype || '', ver_tier: c.ver_tier || '', ver_since: c.ver_since || null, ver_until: c.ver_until || null, ver_status: c.ver_status || (c.ver ? 'verified' : 'unverified'), created_at: c.created_at };
   }
   function normProduct(p) {
     var gal = (p.gal && p.gal.length) ? p.gal : (p.img ? [p.img] : []);
@@ -58,7 +58,7 @@ window.AW_DB = (function () {
   }
   function seedFallback(D) {
     /* built-in catalogue: no invented ratings, followers or stock figures */
-    D.companies.forEach(function (c) { c.followers = 0; c.rating = 0; c.reviews = 0; c.owner_id = null; c.whatsapp = c.whatsapp || ''; });
+    D.companies.forEach(function (c) { c.followers = 0; c.rating = 0; c.reviews = 0; c.owner_id = null; c.whatsapp = c.whatsapp || ''; c.ver = false; c.ver_status = 'unverified'; c.ver_tier = ''; c.socials = c.socials || {}; c.website = c.website || ''; c.logo = c.logo || ''; });
     D.products.forEach(function (p) { p.rating = 0; p.reviews = 0; p.qty = null; p.stock = 'in'; p.active = true; });
   }
 
@@ -101,7 +101,8 @@ window.AW_DB = (function () {
   function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) || 'co'; }
   function saveCompany(o) {
     var e = need(); if (e) return e; if (!profile) return fail('Sign in first');
-    var row = { name: o.name, sector: o.sector, loc: o.loc || '', descr: o.desc || '', year: o.year ? +o.year : null, staff: o.staff || '', products: o.products || [], services: o.services || [], cover: o.cover || '', phone: o.phone || '', email: o.email || profile.email, whatsapp: o.whatsapp || '', owner_id: profile.id };
+    var row = { name: o.name, sector: o.sector, loc: o.loc || '', descr: o.desc || '', year: o.year ? +o.year : null, staff: o.staff || '', products: o.products || [], services: o.services || [], cover: o.cover || '', phone: o.phone || '', email: o.email || profile.email, whatsapp: o.whatsapp || '', owner_id: profile.id, logo: o.logo || '', website: o.website || '', socials: o.socials || {}, country: o.country || 'Nigeria', state: o.state || '', city: o.city || '', btype: o.btype || '' };
+    if (o.country || o.state || o.city) row.loc = [o.city, o.state, (o.country && o.country !== 'Nigeria') ? o.country : ''].filter(Boolean).join(', ') || row.loc;
     if (o.id) return q(client().from('companies').update(row).eq('id', o.id).select().single()).then(normCompany);
     row.id = slug(o.name) + '-' + Math.random().toString(36).slice(2, 6);
     return q(client().from('companies').insert(row).select().single()).then(normCompany);
@@ -177,6 +178,21 @@ window.AW_DB = (function () {
   /* ───────────── verification / contact / newsletter ───────────── */
   function requestVerification(o) { var e = need(); if (e) return e; if (!profile) return fail('Sign in first'); return q(client().from('verification_requests').insert({ company_id: o.company_id, user_id: profile.id, reg_number: o.reg_number || '', docs: o.docs || [], note: o.note || '' }).select().single()); }
   function myVerification(coId) { if (!configured() || !profile) return Promise.resolve(null); return q(client().from('verification_requests').select('*').eq('company_id', coId).order('created_at', { ascending: false }).limit(1).maybeSingle()); }
+  /* ── Verified Business Program ── */
+  var tierCache = null;
+  function verTiers(force) { if (!configured()) return Promise.resolve([]); if (tierCache && !force) return Promise.resolve(tierCache); return q(client().from('verification_tiers').select('*').order('sort')).then(function (r) { tierCache = r || []; return tierCache; }).catch(function () { return []; }); }
+  function myApplication(coId) { if (!configured() || !profile) return Promise.resolve(null); return q(client().from('verification_applications').select('*').eq('company_id', coId).order('created_at', { ascending: false }).limit(1).maybeSingle()); }
+  function applyVerification(o) { var e = need(); if (e) return e; if (!profile) return fail('Sign in first'); var row = { company_id: o.company_id, user_id: profile.id, tier_id: o.tier_id || null, legal_name: o.legal_name || '', reg_number: o.reg_number || '', reg_type: o.reg_type || '', tax_id: o.tax_id || '', address: o.address || '', country: o.country || 'Nigeria', state: o.state || '', city: o.city || '', contact_name: o.contact_name || profile.name || '', contact_phone: o.contact_phone || '', contact_email: o.contact_email || profile.email || '', website: o.website || '', socials: o.socials || {}, business_type: o.business_type || '', sectors: o.sectors || [], category: o.category || '', description: o.description || '', docs: o.docs || [] }; if (o.id) { delete row.user_id; delete row.company_id; return q(client().from('verification_applications').update(row).eq('id', o.id).select().single()); } return q(client().from('verification_applications').insert(row).select().single()); }
+  function addApplicationDocs(id, docs) { var e = need(); if (e) return e; return q(client().from('verification_applications').update({ docs: docs }).eq('id', id).select().single()); }
+  function verHistory(coId) { if (!configured() || !profile) return Promise.resolve([]); return q(client().from('verification_history').select('*').eq('company_id', coId).order('created_at', { ascending: false }).limit(50)).catch(function () { return []; }); }
+  function myVerPayments(coId) { if (!configured() || !profile) return Promise.resolve([]); return q(client().from('verification_payments').select('*').eq('company_id', coId).order('created_at', { ascending: false })).catch(function () { return []; }); }
+  function createVerPayment(o) { var e = need(); if (e) return e; if (!profile) return fail('Sign in first'); return q(client().from('verification_payments').insert({ application_id: o.application_id || null, company_id: o.company_id, user_id: profile.id, tier_id: o.tier_id || null, kind: o.kind, amount: +o.amount, currency: o.currency || 'NGN', method: o.method || 'paystack', reference: o.reference }).select().single()); }
+  function verifyVerPayment(reference, paymentId) {
+    return fetch(C.verificationPayEndpoint || '/api/verification-pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reference: reference, payment_id: paymentId }) })
+      .then(function (r) { return r.json().catch(function () { var e = new Error('The payment server did not respond correctly. Please try again in a moment.'); e.userMessage = e.message; throw e; }).then(function (d) { if (!r.ok || !d.ok) { var e = new Error(d.error || 'Verification failed'); e.userMessage = d.error; throw e; } return d; }); });
+  }
+  function verifiedCompanies() { if (!configured()) return Promise.resolve([]); return q(client().from('companies').select('*').eq('ver', true).order('ver_since', { ascending: false }).limit(24)).then(function (r) { return (r || []).map(normCompany); }).catch(function () { return []; }); }
+
   function contact(o) { var e = need(); if (e) return e; return q(client().from('contact_messages').insert({ name: o.name, email: o.email, phone: o.phone || '', subject: o.subject || '', body: o.body })); }
   function subscribe(email) { var e = need(); if (e) return e; return q(client().from('subscribers').upsert({ email: email.toLowerCase() })); }
 
@@ -196,6 +212,13 @@ window.AW_DB = (function () {
     orders: function () { return q(client().from('orders').select('*, order_items(*)').order('created_at', { ascending: false }).limit(500)); },
     setOrderStatus: setOrderStatus,
     verifications: function () { return q(client().from('verification_requests').select('*, companies(name, sector, loc), profiles(name, email)').order('created_at', { ascending: false })); },
+    applications: function () { return q(client().rpc('expire_verifications')).catch(function () { return null; }).then(function () { return q(client().from('verification_applications').select('*, companies(name, sector, loc, ver, ver_status, ver_until), profiles(name, email)').order('created_at', { ascending: false }).limit(500)); }); },
+    decideApplication: function (id, action, note) { return q(client().rpc('admin_decide_verification', { p_app: id, p_action: action, p_note: note || '' })); },
+    saveTier: function (t) { tierCache = null; var row = { id: t.id, name: t.name, tagline: t.tagline || '', price: (t.price === '' || t.price === null || t.price === undefined) ? null : +t.price, application_fee: +t.application_fee || 0, renewal_price: (t.renewal_price === '' || t.renewal_price === null || t.renewal_price === undefined) ? null : +t.renewal_price, currency: t.currency || 'NGN', duration_days: +t.duration_days || 365, eligibility: t.eligibility || [], requirements: t.requirements || [], benefits: t.benefits || [], badge: t.badge || 'green', placement: +t.placement || 0, featured: !!t.featured, active: t.active !== false, sort: +t.sort || 0, updated_at: new Date().toISOString() }; return q(client().from('verification_tiers').upsert(row).select().single()); },
+    deleteTier: function (id) { tierCache = null; return q(client().from('verification_tiers').delete().eq('id', id)); },
+    verPayments: function () { return q(client().from('verification_payments').select('*, companies(name)').order('created_at', { ascending: false }).limit(500)); },
+    markVerPayment: function (id, status) { return q(client().from('verification_payments').update({ status: status, paid_at: status === 'paid' ? new Date().toISOString() : null }).eq('id', id)); },
+    verHistory: function () { return q(client().from('verification_history').select('*').order('created_at', { ascending: false }).limit(300)); },
     decideVerification: function (id, coId, approve, note) { return q(client().from('verification_requests').update({ status: approve ? 'approved' : 'rejected', admin_note: note || '' }).eq('id', id)).then(function () { return approve ? q(client().from('companies').update({ ver: true }).eq('id', coId)) : null; }); },
     contacts: function () { return q(client().from('contact_messages').select('*').order('created_at', { ascending: false }).limit(300)); },
     handleContact: function (id) { return q(client().from('contact_messages').update({ handled: true }).eq('id', id)); },
@@ -211,6 +234,7 @@ window.AW_DB = (function () {
     createOrder: createOrder, myOrders: myOrders, sellerOrders: sellerOrders, setOrderStatus: setOrderStatus, getOrder: getOrder, verifyPayment: verifyPayment, stripeCheckout: stripeCheckout, verifyStripe: verifyStripe,
     reviews: reviews, addReview: addReview, myFollows: myFollows, follow: follow, threads: threads, thread: thread, sendMessage: sendMessage, markRead: markRead,
     requestVerification: requestVerification, myVerification: myVerification, contact: contact, subscribe: subscribe,
+    verTiers: verTiers, myApplication: myApplication, applyVerification: applyVerification, addApplicationDocs: addApplicationDocs, verHistory: verHistory, myVerPayments: myVerPayments, createVerPayment: createVerPayment, verifyVerPayment: verifyVerPayment, verifiedCompanies: verifiedCompanies,
     sellerStats: sellerStats, adminStats: adminStats, admin: admin
   };
 })();

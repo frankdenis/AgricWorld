@@ -1,0 +1,188 @@
+# Catalogue spec, part D — forestry & agroforestry, beekeeping, agricultural manufacturing, education & research
+# (name, unit, price ₦, moq, delivery, description, specs, variants)
+SPEC_D = {
+'forestry': {
+ 'Timber & Logs': [
+  ("Teak Logs (Tectona grandis, per m³)", "/m³", 185000, 5, "10–14 days", "Plantation-grown teak logs, 25–40 cm diameter, felled to order with permit documentation.", {"Species":"Teak","Diameter":"25–40 cm","Length":"3–6 m"}, [("", 185000), ("— 40+ cm diameter", 240000)]),
+  ("Gmelina Logs (per m³)", "/m³", 62000, 10, "7 days", "Fast-grown gmelina for pallets, furniture frames and pulp; straight logs from managed plantations.", {"Species":"Gmelina arborea","Age":"8–12 yrs"}, None),
+  ("Sawn Hardwood Planks (2×12, 12 ft)", "/plank", 9500, 20, "3–5 days", "Kiln-dried mahogany and iroko planks, planed on request.", {"Size":"2\" × 12\" × 12 ft","Moisture":"≤ 14 %"}, [("", 9500), ("— 2×6", 5200), ("— 1×12", 5800)]),
+  ("Eucalyptus Poles (Treated, 6 m)", "/pole", 14500, 10, "5–7 days", "CCA-treated electricity and fencing poles, straight and debarked.", {"Length":"6 m","Top dia.":"12–15 cm","Treatment":"CCA"}, [("", 14500), ("— 9 m", 26000)]),
+ ],
+ 'Tree Seedlings & Nurseries': [
+  ("Teak Seedlings (Stumps, 100 pcs)", "/100", 18000, 1, "3 days", "Nursery-raised teak stumps ready for planting at the start of the rains.", {"Age":"9–12 months","Pack":"100 stumps"}, None),
+  ("Moringa Seedlings (Polybag)", "/seedling", 350, 50, "2 days", "Healthy moringa seedlings 30–45 cm in polybags for leaf and seed farms.", {"Height":"30–45 cm"}, None),
+  ("Cashew Grafted Seedlings (Jumbo)", "/seedling", 1200, 50, "3–5 days", "Grafted jumbo-nut cashew seedlings that fruit in year three.", {"Type":"Grafted","Variety":"Jumbo"}, [("", 1200), ("— 1,000+ pcs", 950)]),
+  ("Oil Palm Sprouted Nuts (Tenera)", "/nut", 650, 200, "7 days", "Certified tenera sprouted nuts from a licensed seed garden.", {"Variety":"Tenera (DxP)","Certification":"NIFOR"}, None),
+  ("Mahogany & Iroko Seedlings (Mixed 50)", "/pack", 22000, 1, "5 days", "Indigenous hardwood seedlings for enrichment planting and woodlots.", {"Pack":"50 seedlings"}, None),
+ ],
+ 'Agroforestry': [
+  ("Agroforestry Farm Design (per ha)", "/ha", 45000, 2, "Site visit in 7 days", "Alley-cropping and boundary-planting design with species selection and planting calendar.", {"Deliverable":"Plan + species list","Follow-up":"2 visits"}, None),
+  ("Shade Tree Seedlings for Cocoa (Gliricidia, 100)", "/100", 15000, 1, "5 days", "Gliricidia and Terminalia shade seedlings for new cocoa establishments.", {"Species":"Gliricidia / Terminalia"}, None),
+  ("Windbreak Establishment Service (per 100 m)", "/100 m", 120000, 1, "By schedule", "Planting, staking and first-year maintenance of casuarina or neem windbreaks.", {"Species":"Casuarina / Neem","Includes":"12 months care"}, None),
+  ("Fodder Tree Cuttings (Leucaena, 500)", "/500", 12500, 1, "3 days", "Leucaena cuttings for protein banks on livestock farms.", {"Use":"Fodder bank"}, None),
+ ],
+ 'Wood Products': [
+  ("Wooden Pallets (Euro 1200×800)", "/pallet", 8500, 20, "5 days", "Heat-treated four-way pallets for export and warehouse use, ISPM-15 stamped.", {"Size":"1200 × 800 mm","Treatment":"HT ISPM-15"}, [("", 8500), ("— 1200×1000", 9800)]),
+  ("Wooden Crates for Produce (40 kg)", "/crate", 3200, 50, "5 days", "Slatted softwood crates for tomatoes, oranges and pineapples.", {"Capacity":"40 kg"}, None),
+  ("Plywood 18 mm (Marine, 8×4)", "/sheet", 32000, 10, "2 days", "Water-resistant marine plywood for poultry houses and farm structures.", {"Thickness":"18 mm","Sheet":"8 × 4 ft"}, [("", 32000), ("— 12 mm", 21000)]),
+  ("Fence Posts (Split Hardwood, 2.4 m)", "/post", 2800, 50, "5 days", "Durable split posts for ranch and paddock fencing.", {"Length":"2.4 m"}, None),
+ ],
+ 'Forestry Equipment': [
+  ("Petrol Chainsaw 20\" (Professional)", "", 185000, 1, "24 hrs", "58 cc professional chainsaw with 20-inch bar, anti-vibration and chain brake.", {"Engine":"58 cc","Bar":"20 in","Weight":"6.2 kg"}, [("", 185000), ("— 24\" bar", 215000)]),
+  ("Portable Sawmill (Band, 700 mm)", "", 4800000, 1, "30 days", "Trailer-mounted band sawmill cutting logs up to 700 mm diameter; 13 hp petrol engine.", {"Max log":"700 mm","Engine":"13 hp"}, None),
+  ("Log Splitter (Hydraulic, 25 t)", "", 1650000, 1, "14 days", "Tractor-PTO or petrol hydraulic splitter for firewood and post production.", {"Force":"25 t","Drive":"PTO / petrol"}, None),
+  ("Tree Planting Auger (Two-Man)", "", 210000, 1, "5 days", "Two-man earth auger with 200 mm and 300 mm bits for seedling pits.", {"Bits":"200 / 300 mm","Engine":"52 cc"}, None),
+  ("Safety Kit — Chaps, Helmet & Gloves", "/set", 68000, 1, "48 hrs", "Cut-resistant chaps, forestry helmet with visor and ear defenders, gloves.", {"Standard":"EN 381"}, None),
+ ],
+ 'Plantation Services': [
+  ("Plantation Establishment (per ha)", "/ha", 380000, 5, "By schedule", "Land preparation, lining, pitting, planting and first weeding for teak, gmelina or oil palm.", {"Includes":"Seedlings excluded","Season":"Rainy"}, None),
+  ("Forest Inventory & Valuation (per ha)", "/ha", 25000, 10, "14 days", "Sample-plot inventory, volume estimation and stumpage valuation report.", {"Deliverable":"Report + maps"}, None),
+  ("Pruning & Thinning Crew (per ha)", "/ha", 65000, 5, "By schedule", "Silvicultural thinning and pruning with trained crews and equipment.", {"Crew":"6–8 workers"}, None),
+  ("Fire-Break Construction (per km)", "/km", 180000, 1, "Dry season", "Graded 10 m fire breaks and controlled early burning around plantations.", {"Width":"10 m"}, None),
+ ],
+ 'Charcoal & Biomass': [
+  ("Hardwood Charcoal (50 kg Bag)", "/bag", 9800, 20, "3 days", "Dense hardwood lump charcoal from licensed sustainable sources; low ash.", {"Bag":"50 kg","Source":"Licensed woodlots"}, [("", 9800), ("— 20 t truckload", 3400000)]),
+  ("Briquettes from Sawdust (25 kg)", "/bag", 6500, 20, "3 days", "Compressed sawdust briquettes for bakeries and poultry brooding.", {"Bag":"25 kg","Ash":"< 5 %"}, None),
+  ("Wood Pellets (15 kg, 6 mm)", "/bag", 5200, 30, "5 days", "Industrial wood pellets for pellet stoves and boilers.", {"Diameter":"6 mm","Moisture":"< 10 %"}, None),
+  ("Firewood (Split, per Tonne)", "/t", 38000, 2, "3 days", "Seasoned split firewood for processing plants and smokehouses.", {"Moisture":"< 20 %"}, None),
+ ],
+},
+'beekeeping': {
+ 'Bee Colonies & Queens': [
+  ("Nucleus Colony (5-Frame Nuc)", "/nuc", 45000, 1, "7 days", "Established five-frame nucleus with laying queen, brood and stores; transported at night.", {"Frames":"5","Queen":"Mated, marked"}, None),
+  ("Mated Queen Bee (Apis mellifera adansonii)", "/queen", 12000, 1, "7 days", "Locally adapted, gentle-selected mated queen in an introduction cage.", {"Race":"A. m. adansonii"}, None),
+  ("Full Colony in Langstroth Hive", "/colony", 95000, 1, "14 days", "Ten-frame colony in a new hive, ready for honey flow.", {"Hive":"Langstroth 10-frame"}, None),
+  ("Swarm Trap / Bait Hive Service", "/hive", 8000, 5, "By season", "Bait hives placed and monitored on your land; colonies transferred when caught.", {"Season":"Nov–Mar"}, None),
+ ],
+ 'Honey': [
+  ("Raw Wildflower Honey (25 kg Bucket)", "/bucket", 95000, 1, "3 days", "Unheated, coarse-filtered honey from savannah forage; moisture below 19 %.", {"Weight":"25 kg","Moisture":"≤ 19 %"}, [("", 95000), ("— 5 kg", 21000), ("— 1 kg jar", 5200)]),
+  ("Acacia Honey (Light, 1 kg)", "/jar", 6800, 6, "3 days", "Light, slow-crystallising acacia honey from northern apiaries.", {"Colour":"Extra light amber"}, None),
+  ("Comb Honey (500 g Cut Comb)", "/pack", 4500, 6, "5 days", "Cut comb honey in food-grade trays.", {"Weight":"500 g"}, None),
+  ("Bulk Honey for Processors (per Tonne)", "/t", 3200000, 1, "14 days", "Drummed bulk honey with lab certificate of analysis.", {"Packaging":"300 kg drums","COA":"Included"}, None),
+ ],
+ 'Beeswax & Propolis': [
+  ("Filtered Beeswax Block (1 kg)", "/kg", 8500, 5, "5 days", "Clean, triple-filtered yellow beeswax for cosmetics and foundation sheets.", {"Grade":"Cosmetic"}, [("", 8500), ("— 25 kg", 195000)]),
+  ("Raw Propolis (500 g)", "/pack", 14000, 2, "5 days", "Scraped raw propolis from Langstroth hives.", {"Weight":"500 g"}, None),
+  ("Beeswax Foundation Sheets (Langstroth Deep, 10)", "/pack", 9500, 5, "5 days", "Milled foundation sheets from pure beeswax.", {"Size":"Langstroth deep","Pack":"10 sheets"}, None),
+  ("Royal Jelly (Fresh, 100 g)", "/pack", 38000, 1, "7 days", "Cold-chain fresh royal jelly from managed queen-rearing colonies.", {"Weight":"100 g","Storage":"Frozen"}, None),
+ ],
+ 'Beehives': [
+  ("Langstroth Hive (Complete, 10-Frame)", "", 42000, 1, "5 days", "Two deep boxes, 20 wired frames, bottom board, inner and telescoping cover in seasoned hardwood.", {"Frames":"20","Wood":"Seasoned hardwood"}, [("", 42000), ("— 5+ hives", 38500)]),
+  ("Kenya Top-Bar Hive", "", 28000, 1, "5 days", "Low-cost top-bar hive with 27 bars and hinged roof.", {"Bars":"27"}, None),
+  ("Hive Stand (Steel, Ant-Proof)", "", 12000, 2, "5 days", "Galvanised stand with oil-cup ant guards.", {"Material":"Galvanised steel"}, None),
+  ("Hive Supers & Frames (Set of 10)", "/set", 18000, 1, "5 days", "Additional medium super with ten assembled frames.", {"Frames":"10 medium"}, None),
+ ],
+ 'Beekeeping Equipment': [
+  ("Stainless Honey Extractor (4-Frame, Manual)", "", 165000, 1, "7 days", "Food-grade stainless tangential extractor with honey gate.", {"Frames":"4","Drive":"Manual"}, [("", 165000), ("— 12-frame electric", 620000)]),
+  ("Bee Smoker (Stainless, with Guard)", "", 9500, 1, "48 hrs", "Large-chamber smoker with heat shield and hook.", {"Material":"Stainless steel"}, None),
+  ("Hive Tool & Bee Brush Set", "/set", 4800, 1, "48 hrs", "J-hook hive tool and soft-bristle brush.", {}, None),
+  ("Honey Settling Tank (100 kg)", "", 78000, 1, "7 days", "Double-strainer stainless settling tank with gate valve.", {"Capacity":"100 kg"}, None),
+  ("Refractometer (Honey Moisture)", "", 22000, 1, "48 hrs", "Hand-held refractometer 12–27 % water with ATC.", {"Range":"12–27 %"}, None),
+ ],
+ 'Protective Gear': [
+  ("Full Bee Suit (Ventilated, with Veil)", "", 32000, 1, "48 hrs", "Three-layer ventilated suit with fencing veil and elastic cuffs.", {"Sizes":"S–XXL"}, [("", 32000), ("— Cotton suit", 21000)]),
+  ("Beekeeping Gloves (Goatskin, Long Cuff)", "/pair", 6500, 1, "48 hrs", "Soft goatskin gloves with canvas gauntlet.", {"Sizes":"S–XL"}, None),
+  ("Bee Veil & Hat", "", 7500, 1, "48 hrs", "Round veil with wide-brim hat.", {}, None),
+ ],
+ 'Pollination Services': [
+  ("Orchard Pollination — Hive Rental (per Hive per Season)", "/hive", 25000, 4, "By season", "Managed colonies placed in mango, cashew or watermelon fields at bloom; strength-inspected.", {"Season":"Bloom period","Min":"4 hives"}, None),
+  ("Greenhouse Pollination (Bumble/Bee Units)", "/unit", 35000, 1, "7 days", "Small hive units for tomato and pepper greenhouses.", {"Coverage":"~1,000 m²"}, None),
+  ("Apiary Setup & Training (Full Day)", "/day", 85000, 1, "By schedule", "On-farm apiary siting, hive installation and beginner training for your team.", {"Trainees":"Up to 10"}, None),
+ ],
+},
+'manufacturing': {
+ 'Farm Machinery Manufacturers': [
+  ("Locally Fabricated Multi-Crop Thresher", "", 1450000, 1, "21 days", "Nigerian-built thresher for maize, sorghum, rice and soybean; 8 hp diesel engine, 1 t/hr.", {"Capacity":"1 t/hr","Engine":"8 hp diesel","Origin":"Made in Nigeria"}, None),
+  ("Tractor-Drawn Ridger (3-Row)", "", 480000, 1, "14 days", "Heavy-duty three-row ridger fabricated from 12 mm plate.", {"Rows":"3","Hitch":"3-point Cat II"}, None),
+  ("Cassava Harvester (Tractor-Mounted)", "", 1850000, 1, "30 days", "Locally manufactured lifter reducing tuber damage; suits 60–75 hp tractors.", {"Tractor":"60–75 hp"}, None),
+  ("Boom Sprayer (600 L, Tractor)", "", 1250000, 1, "21 days", "Fabricated 12 m boom sprayer with PTO pump and 600 L polyethylene tank.", {"Tank":"600 L","Boom":"12 m"}, None),
+  ("OEM Fabrication — Custom Farm Implement", "/quote", 0, 1, "By quote", "Design and build custom implements to drawing; send specifications for a quotation.", {"Service":"Custom"}, None),
+ ],
+ 'Processing Equipment': [
+  ("Stainless Fruit Juice Line (500 L/hr)", "", 18500000, 1, "60 days", "Washing, crushing, pressing, pasteurising and filling line in SS304.", {"Capacity":"500 L/hr","Material":"SS304"}, None),
+  ("Cassava Flour Processing Line (2 t/day)", "", 9800000, 1, "45 days", "Peeler, grater, press, flash dryer and mill for HQCF.", {"Capacity":"2 t/day"}, None),
+  ("Palm Kernel Oil Expeller (1 t/hr)", "", 4200000, 1, "30 days", "Locally built screw press with filter press and 30 hp motor.", {"Capacity":"1 t/hr","Motor":"30 hp"}, None),
+  ("Tomato Paste Mini Plant (200 kg/hr)", "", 12500000, 1, "60 days", "Sorting, pulping, evaporation and hot-fill units for SME processors.", {"Capacity":"200 kg/hr"}, None),
+  ("Rice Destoner & Polisher Set", "", 2650000, 1, "21 days", "Destoner, whitener and polisher for 1 t/hr rice mills.", {"Capacity":"1 t/hr"}, None),
+ ],
+ 'Packaging Manufacturers': [
+  ("Woven Polypropylene Sacks (50 kg, Printed)", "/1000", 185000, 1, "10 days", "Laminated PP sacks with your brand printed in 2 colours.", {"Pack":"1,000 sacks","Print":"2 colours"}, [("", 185000), ("— 100 kg", 260000)]),
+  ("Plastic Produce Crates (Vented, 60×40)", "/crate", 4200, 50, "7 days", "Injection-moulded stackable crates for tomatoes, fish and vegetables.", {"Size":"60 × 40 × 30 cm"}, None),
+  ("Egg Trays (Pulp, 30-Egg)", "/1000", 78000, 1, "7 days", "Moulded pulp egg trays from recycled paper.", {"Pack":"1,000 trays"}, None),
+  ("Stand-Up Pouches with Zip (500 g, Printed)", "/1000", 165000, 1, "14 days", "Kraft or metallised pouches for spices, honey powder and nuts.", {"Pack":"1,000 pouches"}, None),
+  ("Hermetic Grain Bags (100 kg, Triple Layer)", "/bag", 1800, 50, "5 days", "Insect-proof hermetic liner bags to store grain without chemicals.", {"Capacity":"100 kg"}, None),
+ ],
+ 'Storage Systems': [
+  ("Galvanised Steel Silo (100 t, Installed)", "", 16500000, 1, "60 days", "Fabricated flat-bottom silo with aeration, temperature cables and sweep auger.", {"Capacity":"100 t"}, None),
+  ("Walk-In Cold Room (20 ft, Solar-Ready)", "", 9800000, 1, "45 days", "Insulated cold room with 2–8 °C unit; optional solar hybrid kit.", {"Size":"20 ft","Temp":"2–8 °C"}, None),
+  ("Water Storage Tank (Steel, 50,000 L)", "", 4800000, 1, "30 days", "Bolted galvanised steel tank for irrigation and livestock water.", {"Capacity":"50,000 L"}, None),
+  ("Modular Warehouse Racking (per Bay)", "/bay", 185000, 4, "14 days", "Pallet racking bays 2.7 m wide, 3 levels.", {"Bay":"2.7 m, 3 levels"}, None),
+ ],
+ 'Solar Agri Equipment': [
+  ("Solar Water Pump System (3 hp, Complete)", "", 2650000, 1, "14 days", "Submersible DC pump, 3.3 kW solar array, controller and mounting.", {"Pump":"3 hp","Array":"3.3 kW"}, [("", 2650000), ("— 5 hp", 3900000)]),
+  ("Solar Dryer for Produce (10-Tray)", "", 480000, 1, "14 days", "Indirect solar dryer for pepper, ginger, fish and cassava chips.", {"Trays":"10"}, None),
+  ("Solar Cold Box (200 L, Off-Grid)", "", 1850000, 1, "14 days", "DC refrigeration for vaccines, dairy and fish; 2 days autonomy.", {"Capacity":"200 L"}, None),
+  ("Solar Electric Fence Energiser (10 km)", "", 165000, 1, "7 days", "Solar-powered energiser kit for paddocks and pest exclusion.", {"Range":"10 km"}, None),
+  ("Solar Poultry House Lighting Kit", "", 95000, 1, "5 days", "Timer-controlled LED lighting for 2,000-bird houses.", {"Coverage":"2,000 birds"}, None),
+ ],
+ 'Sensors & Lab Equipment': [
+  ("Soil NPK & pH Meter (Portable)", "", 145000, 1, "5 days", "Digital soil tester reading N, P, K, pH, moisture and temperature.", {"Readings":"N P K pH moisture temp"}, None),
+  ("Grain Moisture Meter (Digital)", "", 68000, 1, "48 hrs", "Multi-grain moisture meter with temperature compensation.", {"Range":"5–35 %"}, None),
+  ("Milk Analyser (Ultrasonic)", "", 950000, 1, "14 days", "Fat, SNF, protein, density and water-adulteration in 60 seconds.", {"Time":"60 s"}, None),
+  ("Aflatoxin Rapid Test Kit (25 Strips)", "/kit", 85000, 1, "5 days", "Lateral-flow strips with reader for maize and groundnut.", {"Strips":"25"}, None),
+  ("Weather Station (Farm, GSM)", "", 420000, 1, "7 days", "Rain, wind, temperature, humidity and solar radiation logging to the cloud.", {"Connectivity":"GSM"}, None),
+ ],
+ 'Feed Mill Machinery': [
+  ("Feed Pellet Mill (Ring Die, 1 t/hr)", "", 6800000, 1, "45 days", "Ring-die pellet mill with conditioner for poultry and fish feed.", {"Capacity":"1 t/hr"}, None),
+  ("Hammer Mill (Locally Built, 500 kg/hr)", "", 850000, 1, "14 days", "Fabricated hammer mill with cyclone and 15 hp motor.", {"Capacity":"500 kg/hr","Motor":"15 hp"}, [("", 850000), ("— 1 t/hr", 1450000)]),
+  ("Vertical Feed Mixer (1 t Batch)", "", 1250000, 1, "21 days", "Screw-type vertical mixer for mash feeds.", {"Batch":"1 t"}, None),
+  ("Floating Fish Feed Extruder (200 kg/hr)", "", 4500000, 1, "30 days", "Dry-type extruder for floating catfish pellets.", {"Capacity":"200 kg/hr"}, None),
+  ("Complete Mini Feed Mill (500 kg/hr)", "", 9800000, 1, "60 days", "Hammer mill, mixer, pellet press, cooler and bagging scale.", {"Capacity":"500 kg/hr"}, None),
+ ],
+},
+'education': {
+ 'Agricultural Training': [
+  ("Commercial Poultry Farming Course (3 Days)", "/seat", 65000, 1, "Next cohort", "Hands-on brooding, feeding, biosecurity and record-keeping on a working farm; certificate issued.", {"Duration":"3 days","Format":"On-farm"}, None),
+  ("Catfish Farming Masterclass (2 Days)", "/seat", 45000, 1, "Next cohort", "Hatchery, pond management, feeding and marketing with practical sessions.", {"Duration":"2 days"}, None),
+  ("Greenhouse Vegetable Production Training (5 Days)", "/seat", 120000, 1, "Next cohort", "Nursery, fertigation, pest management and harvest handling.", {"Duration":"5 days"}, None),
+  ("Agribusiness Finance & Records (Online, 4 Weeks)", "/seat", 35000, 1, "Immediate", "Live online classes with templates for costing, cash flow and loan applications.", {"Format":"Online","Duration":"4 weeks"}, None),
+  ("Tractor Operation & Maintenance (1 Week)", "/seat", 95000, 1, "Next cohort", "Certified operator training including servicing and implement setup.", {"Duration":"1 week"}, None),
+ ],
+ 'Research Institutes': [
+  ("Variety Trial Service (per Trial Plot)", "/plot", 250000, 1, "Season", "Replicated field trial of your seed or input with a statistical report.", {"Design":"RCBD, 4 reps","Deliverable":"Report"}, None),
+  ("Crop Disease Diagnosis (per Sample)", "/sample", 15000, 1, "7 days", "Laboratory identification of fungal, bacterial and viral pathogens with control advice.", {"Turnaround":"7 days"}, None),
+  ("Feed Formulation Research Package", "/project", 350000, 1, "30 days", "Least-cost ration formulation and feeding trial for a target species.", {"Duration":"30 days"}, None),
+  ("Breeder Seed (Foundation Class, per kg)", "/kg", 4500, 20, "Season", "Foundation-class seed of released varieties from institute multiplication plots.", {"Class":"Foundation"}, None),
+ ],
+ 'Extension Services': [
+  ("Farm Extension Visit (Half Day)", "/visit", 25000, 1, "3–5 days", "Trained extension agent visits your farm to diagnose problems and set an action plan.", {"Duration":"Half day"}, None),
+  ("Farmer Group Training Programme (per Session)", "/session", 120000, 1, "By schedule", "Field-day style training for cooperatives (up to 40 farmers).", {"Participants":"Up to 40"}, None),
+  ("Demonstration Plot Setup (per Plot)", "/plot", 85000, 1, "Season", "Establish and manage a demonstration plot for input companies or NGOs.", {"Size":"0.25 ha"}, None),
+  ("Digital Advisory Subscription (SMS/WhatsApp, Annual)", "/yr", 12000, 1, "Immediate", "Weekly agronomy alerts and Q&A in your language.", {"Channel":"SMS + WhatsApp"}, None),
+ ],
+ 'Farm Internships': [
+  ("Structured Farm Internship (3 Months, Poultry)", "/placement", 0, 1, "Next intake", "Supervised placement on a commercial poultry farm with weekly assessments; stipend as agreed with host.", {"Duration":"3 months"}, None),
+  ("Aquaculture Apprenticeship (6 Months)", "/placement", 0, 1, "Next intake", "Hatchery-to-harvest apprenticeship on a certified fish farm.", {"Duration":"6 months"}, None),
+  ("Industrial Attachment Placement Service (Students)", "/student", 15000, 1, "14 days", "Placement matching and supervision for SIWES/IT students in agribusinesses.", {"Fee":"Administrative"}, None),
+ ],
+ 'Publications & Data': [
+  ("Nigerian Agricultural Price Bulletin (Monthly, Annual Sub)", "/yr", 60000, 1, "Immediate", "Monthly wholesale prices for 40 commodities across 12 markets, PDF + spreadsheet.", {"Frequency":"Monthly"}, None),
+  ("Poultry Production Handbook (Print + PDF)", "/copy", 8500, 1, "5 days", "320-page practical manual for tropical poultry production.", {"Pages":"320"}, None),
+  ("Farm Record-Keeping Templates (Excel Pack)", "/pack", 5000, 1, "Immediate", "Costing, inventory, flock/herd and cash-book templates.", {"Format":"Excel"}, None),
+  ("Market Study — Custom Commodity Report", "/report", 450000, 1, "30 days", "Commissioned value-chain and market study for investors and processors.", {"Duration":"30 days"}, None),
+ ],
+ 'Laboratories': [
+  ("Soil Fertility Analysis (Full Panel)", "/sample", 18000, 1, "10 days", "pH, organic carbon, N, P, K, Ca, Mg, CEC and texture with fertiliser recommendation.", {"Turnaround":"10 days"}, [("", 18000), ("— Basic (pH, NPK)", 9500)]),
+  ("Water Quality Test (Irrigation / Aquaculture)", "/sample", 15000, 1, "7 days", "EC, pH, nitrate, ammonia, hardness and coliforms.", {"Turnaround":"7 days"}, None),
+  ("Feed & Forage Proximate Analysis", "/sample", 22000, 1, "10 days", "Crude protein, fat, fibre, ash and moisture.", {"Turnaround":"10 days"}, None),
+  ("Seed Germination & Purity Test", "/lot", 12000, 1, "14 days", "ISTA-method germination, purity and moisture certificate.", {"Method":"ISTA"}, None),
+  ("Plant Tissue Culture Plantlets (Banana/Plantain, 100)", "/100", 45000, 1, "21 days", "Disease-free hardened plantlets from a tissue-culture lab.", {"Pack":"100 plantlets"}, None),
+ ],
+ 'Youth Agripreneur Programs': [
+  ("Youth Agripreneur Incubation (12 Weeks)", "/seat", 150000, 1, "Next cohort", "Business model, farm practicals, mentorship and pitch day for 18–35 year olds.", {"Duration":"12 weeks"}, None),
+  ("Women in Agribusiness Bootcamp (1 Week)", "/seat", 55000, 1, "Next cohort", "Production, processing and market-access training with cooperative formation support.", {"Duration":"1 week"}, None),
+  ("School Farm Setup & Curriculum Support", "/school", 480000, 1, "30 days", "Design and establish a teaching farm with lesson plans for secondary schools.", {"Includes":"Curriculum"}, None),
+  ("Mentorship Match (6 Months)", "/placement", 0, 1, "14 days", "Pairing with an experienced agripreneur; monthly check-ins.", {"Duration":"6 months"}, None),
+ ],
+},
+}
