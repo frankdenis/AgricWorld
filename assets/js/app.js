@@ -375,6 +375,13 @@ window.AW = (function () {
     }).catch(function () { });
   }
   var booted = false;
+  /* Wikimedia CDN occasionally answers a cold thumbnail with a transient error — retry twice before any fallback runs */
+  document.addEventListener('error', function (e) {
+    var im = e.target; if (!im || im.tagName !== 'IMG' || !/wikimedia\.org\//.test(im.src || '')) return;
+    var n = +(im.dataset.retry || 0); if (n >= 2) return;
+    im.dataset.retry = n + 1; e.stopPropagation();
+    var u = im.src; setTimeout(function () { im.src = ''; im.src = u; }, 1500 * (n + 1));
+  }, true);
   function init() {
     applyTheme(state.theme, false);
     var st = document.createElement('style'); st.textContent = '@keyframes sparkDraw{to{stroke-dashoffset:0}}'; document.head.appendChild(st);

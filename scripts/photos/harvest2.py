@@ -55,13 +55,13 @@ def cat_members(cat, files_limit=120):
 
 def main():
     index = {}
-    idx_path = '/home/user/tools/pool_index.json'
+    idx_path = os.environ.get('INDEX', '/home/user/tools/pool_index.json')
     if os.path.exists(idx_path): index = json.load(open(idx_path))
     seen_urls = set(v['url'] for subs in index.values() for lst in subs.values() for v in lst)
     seen_titles = set(v.get('title', '') for subs in index.values() for lst in subs.values() for v in lst)
     only = sys.argv[1:]
     target = int(os.environ.get('PER_SUB', '70'))
-    pool = cf.ThreadPoolExecutor(max_workers=10)
+    pool = cf.ThreadPoolExecutor(max_workers=5)
     for sec, subs in LABELS.items():
         if only and sec not in only: continue
         index.setdefault(sec, {})

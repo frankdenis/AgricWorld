@@ -20,6 +20,7 @@ def get(url, tries=3, timeout=40):
             req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': '*/*'})
             with urllib.request.urlopen(req, timeout=timeout) as r: return r.read()
         except Exception as e:
+            if getattr(e, 'code', 0) == 429: time.sleep(20 * (i + 1))
             if i == tries - 1: return None
             time.sleep(1.5 * (i + 1))
 
@@ -41,7 +42,7 @@ def commons_search(q, limit=40):
 def commons_info(titles):
     out = []
     for i in range(0, len(titles), 50):
-        u = 'https://commons.wikimedia.org/w/api.php?' + urllib.parse.urlencode({'action': 'query', 'titles': '|'.join(titles[i:i + 50]), 'prop': 'imageinfo', 'iiprop': 'url|size|mime|extmetadata', 'iiurlwidth': 480, 'iiextmetadatafilter': 'ImageDescription|Artist|LicenseShortName|Categories', 'format': 'json'})
+        u = 'https://commons.wikimedia.org/w/api.php?' + urllib.parse.urlencode({'action': 'query', 'titles': '|'.join(titles[i:i + 50]), 'prop': 'imageinfo', 'iiprop': 'url|size|mime|extmetadata', 'iiurlwidth': 640, 'iiextmetadatafilter': 'ImageDescription|Artist|LicenseShortName|Categories', 'format': 'json'})
         d = get(u)
         if not d: continue
         try: pages = json.loads(d)['query']['pages']
