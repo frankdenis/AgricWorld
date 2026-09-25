@@ -28,7 +28,7 @@ window.AW_DB = (function () {
   }
   function normProduct(p) {
     var gal = (p.gal && p.gal.length) ? p.gal : (p.img ? [p.img] : []);
-    return { id: p.id, sec: p.sec, name: p.name, price: +p.price, unit: p.unit || '', old: p.old ? +p.old : null, co: p.co, img: p.img || gal[0] || '', gal: gal, tag: p.tag || null, qty: p.qty, stock: p.qty === null || p.qty === undefined ? 'in' : p.qty <= 0 ? 'out' : p.qty <= (p.moq || 1) * 5 ? 'low' : 'in', moq: p.moq || 1, delivery: p.delivery || 'Arranged with seller', desc: p.descr || '', specs: p.specs || {}, active: p.active !== false, created_at: p.created_at, rating: 0, reviews: 0 };
+    return { id: p.id, sec: p.sec, sub: p.sub || '', name: p.name, price: +p.price, unit: p.unit || '', old: p.old ? +p.old : null, co: p.co, img: p.img || gal[0] || '', gal: gal, tag: p.tag || null, qty: p.qty, stock: p.qty === null || p.qty === undefined ? 'in' : p.qty <= 0 ? 'out' : p.qty <= (p.moq || 1) * 5 ? 'low' : 'in', moq: p.moq || 1, delivery: p.delivery || 'Arranged with seller', desc: p.descr || '', specs: p.specs || {}, active: p.active !== false, created_at: p.created_at, rating: 0, reviews: 0 };
   }
   function link(D) {
     D.secMap = {}; D.sectors.forEach(function (s) { D.secMap[s.id] = s; });
@@ -109,7 +109,7 @@ window.AW_DB = (function () {
   function myProducts(coId) { var e = need(); if (e) return e; return q(client().from('products').select('*').eq('co', coId).order('created_at', { ascending: false })).then(function (r) { return r.map(normProduct); }); }
   function saveProduct(o) {
     var e = need(); if (e) return e;
-    var row = { co: o.co, sec: o.sec, name: o.name, price: +o.price, unit: o.unit || '', old: o.old ? +o.old : null, img: o.img || '', gal: o.gal || (o.img ? [o.img] : []), tag: o.tag || null, qty: (o.qty === '' || o.qty === null || o.qty === undefined) ? null : +o.qty, moq: +o.moq || 1, delivery: o.delivery || '', descr: o.desc || '', specs: o.specs || {}, active: o.active !== false };
+    var row = { co: o.co, sec: o.sec, sub: o.sub || '', name: o.name, price: +o.price, unit: o.unit || '', old: o.old ? +o.old : null, img: o.img || '', gal: o.gal || (o.img ? [o.img] : []), tag: o.tag || null, qty: (o.qty === '' || o.qty === null || o.qty === undefined) ? null : +o.qty, moq: +o.moq || 1, delivery: o.delivery || '', descr: o.desc || '', specs: o.specs || {}, active: o.active !== false };
     if (o.id) return q(client().from('products').update(row).eq('id', o.id).select().single()).then(normProduct);
     return q(client().from('products').insert(row).select().single()).then(normProduct);
   }

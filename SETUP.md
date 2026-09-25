@@ -8,7 +8,7 @@ The site is a static front-end (Vercel) + **Supabase** (accounts, products, orde
 
 1. Go to <https://supabase.com> → **New project**. Name: `agricworld`, region: closest to Nigeria (e.g. *West EU / London*). Save the database password somewhere safe.
 2. Left menu → **SQL Editor** → **New query** → paste the whole of `supabase/schema.sql` → **Run**. (Creates all tables, security rules, storage bucket and the owner rule.)
-3. *(Optional)* Same place, paste `supabase/seed.sql` → **Run** to launch with the 27 example companies and 128 listings. Skip it for an empty marketplace.
+3. *(Optional)* Same place, paste `supabase/seed.sql` → **Run** to launch with the full starter catalogue (200+ companies, 1,200+ listings across all 22 sectors, each with real photography). Skip it for an empty marketplace. If your database was created before the XXL catalogue, run `supabase/catalogue.sql` first (adds the sub-category column).
 4. Left menu → **Authentication → Providers → Email**: keep *Enable email provider* ON.
    - For instant sign-ups without email confirmation, turn **Confirm email** OFF. (Turn it back on later for production.)
 5. **Authentication → URL Configuration**: set *Site URL* to your live URL (e.g. `https://agricworld.vercel.app`) and add the same URL under *Redirect URLs*.

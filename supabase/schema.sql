@@ -97,6 +97,7 @@ create table if not exists public.products (
   id          bigserial primary key,
   co          text not null references public.companies(id) on delete cascade,
   sec         text not null,
+  sub         text default '',
   name        text not null,
   price       numeric(14,2) not null check (price >= 0),
   unit        text default '',

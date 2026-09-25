@@ -1,0 +1,663 @@
+{
+"poultry": {
+"Day-Old Chicks": [
+"day old chicks -nest -wild -sparrow -pigeon -dove -songbird -gull",
+"baby chicks brooder -nest -wild -sparrow -pigeon -dove -songbird -gull"
+],
+"Broilers": [
+"broiler chickens farm",
+"poultry house broilers"
+],
+"Layers & Pullets": [
+"laying hens farm -rooster",
+"hens free range farm -rooster"
+],
+"Turkeys & Ducks": [
+"turkey farm birds -wild -lake -pond -zoo",
+"domestic ducks farm -wild -lake -pond -zoo"
+],
+"Table Eggs": [
+"chicken eggs tray",
+"fresh eggs basket farm"
+],
+"Hatchery Equipment": [
+"incubator eggs",
+"hatching eggs",
+"hatchery chicks"
+],
+"Poultry Housing": [
+"poultry house interior",
+"chicken coop farm"
+]
+},
+"livestock": {
+"Cattle & Bulls": [
+"cattle herd Nigeria -bison -bullfight -rodeo",
+"Fulani cattle -bison -bullfight -rodeo",
+"zebu cattle Africa -bison -bullfight -rodeo"
+],
+"Goats": [
+"goats farm Africa -ibex -wild -mountain -zoo",
+"West African dwarf goat -ibex -wild -mountain -zoo",
+"goat herd -ibex -wild -mountain -zoo"
+],
+"Sheep & Rams": [
+"sheep ram Africa -bighorn -wild -mouflon",
+"Uda sheep -bighorn -wild -mouflon",
+"sheep flock farm -bighorn -wild -mouflon"
+],
+"Pigs & Piglets": [
+"pig farm piglets -boar -wild -warthog",
+"pigs sty farm -boar -wild -warthog"
+],
+"Rabbits": [
+"rabbit farm hutch -wild -hare",
+"domestic rabbits -wild -hare"
+],
+"Snails": [
+"giant African land snail -sea -marine -shell -slug",
+"snail farming -sea -marine -shell -slug"
+],
+"Breeding Services": [
+"cattle ranch bull",
+"livestock market Africa"
+]
+},
+"fisheries": {
+"Fingerlings & Juveniles": [
+"fish fingerlings -aquarium",
+"tilapia fry hatchery -aquarium"
+],
+"Table-Size Fish": [
+"catfish aquaculture -aquarium -museum -diving",
+"tilapia fish farm harvest -aquarium -museum -diving"
+],
+"Smoked & Dried Fish": [
+"smoked fish market Africa",
+"dried fish market"
+],
+"Fish Feed": [
+"fish feed pellets",
+"feeding fish pond"
+],
+"Ponds & Tanks": [
+"fish pond farm",
+"aquaculture tanks"
+],
+"Aerators & Pumps": [
+"pond aerator",
+"aquaculture aeration"
+],
+"Hatchery Services": [
+"fish hatchery",
+"fish farm cages lake"
+]
+},
+"crops": {
+"Maize": [
+"maize field Africa",
+"corn harvest cobs",
+"maize farmer"
+],
+"Rice & Paddy": [
+"rice paddy farmers",
+"rice harvest field",
+"paddy rice grain"
+],
+"Soybean": [
+"soybean field",
+"soybeans harvest"
+],
+"Cassava & Tubers": [
+"cassava",
+"manioc harvest",
+"cassava plant",
+"yam tubers"
+],
+"Wheat & Sorghum": [
+"sorghum field Africa",
+"wheat field harvest",
+"millet field"
+],
+"Beans & Legumes": [
+"cowpea beans",
+"groundnut harvest",
+"legumes beans sacks"
+],
+"Sugarcane": [
+"sugarcane field",
+"sugarcane harvest"
+]
+},
+"seeds": {
+"Hybrid Maize Seed": [
+"maize seeds",
+"corn kernels",
+"maize cob seed",
+"corn seed"
+],
+"Vegetable Seeds": [
+"vegetable seeds packets",
+"seeds in hand planting"
+],
+"Rice Seed": [
+"rice seeds grain",
+"rice seedlings nursery"
+],
+"Seedlings & Nursery": [
+"plant nursery seedlings",
+"vegetable seedlings trays"
+],
+"Tree Seedlings": [
+"tree nursery",
+"seedlings nursery bags",
+"tree seedlings"
+],
+"Organic Seeds": [
+"seeds",
+"heirloom seeds",
+"seed packets",
+"seeds hand farmer"
+]
+},
+"agrochem": {
+"Herbicides": [
+"herbicide spraying",
+"spraying weeds",
+"farmer sprayer field",
+"pesticide application"
+],
+"Insecticides": [
+"spraying crops pesticide",
+"crop pest insects leaf"
+],
+"Fungicides": [
+"spraying orchard",
+"crop disease leaf"
+],
+"Growth Regulators": [
+"greenhouse tomato plants",
+"healthy crop plants rows"
+],
+"Bio-Pesticides": [
+"neem tree leaves",
+"organic farming vegetables"
+],
+"Sprayers": [
+"knapsack sprayer farmer",
+"tractor sprayer boom"
+]
+},
+"vet": {
+"Vaccines": [
+"vaccination livestock",
+"veterinarian vaccine",
+"vaccinating chickens"
+],
+"Antibiotics & Dewormers": [
+"veterinarian injection",
+"veterinary treatment cattle",
+"veterinarian animal"
+],
+"Supplements": [
+"cattle feeding trough",
+"livestock mineral block"
+],
+"Diagnostics": [
+"veterinary laboratory",
+"veterinarian examining cow"
+],
+"Vet Clinics": [
+"veterinary clinic animals",
+"veterinarian goat"
+],
+"Mobile Vet Services": [
+"veterinarian field Africa livestock",
+"animal health worker"
+]
+},
+"equipment": {
+"Hand Tools": [
+"hoe farming",
+"farm tools",
+"machete",
+"garden tools"
+],
+"Sprayers": [
+"sprayer",
+"knapsack sprayer",
+"pesticide sprayer farmer"
+],
+"Water Pumps": [
+"water pump irrigation farm",
+"diesel pump farm"
+],
+"Incubators": [
+"egg incubator",
+"chicks hatching incubator"
+],
+"Milking Machines": [
+"milking machine dairy",
+"dairy cow milking parlour"
+],
+"Weighing Scales": [
+"weighing scale",
+"weighing produce",
+"scale market sacks"
+],
+"Solar Kits": [
+"solar panels farm",
+"solar panel rural Africa"
+]
+},
+"machinery": {
+"Tractors": [
+"tractor ploughing field",
+"tractor farm Africa"
+],
+"Combine Harvesters": [
+"combine harvester wheat",
+"combine harvester field"
+],
+"Planters & Seeders": [
+"seed drill planter tractor",
+"planting machine field"
+],
+"Ploughs & Tillers": [
+"plough tractor",
+"ploughing",
+"harrow tractor field",
+"tiller"
+],
+"Threshers": [
+"thresher",
+"threshing machine",
+"grain threshing",
+"maize sheller"
+],
+"Balers": [
+"hay baler tractor",
+"round hay bales field"
+],
+"Spare Parts": [
+"tractor engine repair",
+"agricultural machinery workshop"
+]
+},
+"fertilizer": {
+"NPK Blends": [
+"fertilizer granules",
+"fertilizer bag",
+"fertiliser spreading field",
+"NPK fertilizer"
+],
+"Urea": [
+"fertilizer application maize",
+"urea fertilizer"
+],
+"Organic Compost": [
+"compost pile farm",
+"organic manure compost"
+],
+"Foliar Fertilizer": [
+"spraying leaves crop",
+"foliar spray plants"
+],
+"Lime & Gypsum": [
+"lime spreading field",
+"soil amendment farm"
+],
+"Micronutrients": [
+"healthy green crop leaves",
+"plant nutrients soil"
+]
+},
+"feed": {
+"Poultry Feed": [
+"chicken feed",
+"chickens eating feed",
+"poultry feeder",
+"hens feeding"
+],
+"Fish Feed": [
+"fish feed",
+"feeding fish farm",
+"aquaculture feeding pellets"
+],
+"Cattle & Goat Feed": [
+"cattle feed silage",
+"hay feed cattle"
+],
+"Pig Feed": [
+"pigs feeding trough",
+"pig feed"
+],
+"Feed Concentrates": [
+"animal feed bags",
+"feed mill sacks",
+"livestock feed pellets",
+"poultry feed mill"
+],
+"Raw Materials": [
+"grain sacks market",
+"maize sacks",
+"soybean sacks warehouse",
+"grain bulk"
+],
+"Feed Mills": [
+"feed mill factory",
+"pellet mill machine"
+]
+},
+"fruits": {
+"Tomatoes & Peppers": [
+"tomato harvest crates",
+"chili peppers market Africa",
+"tomatoes market Nigeria"
+],
+"Leafy Greens": [
+"leafy vegetables market Africa",
+"spinach farm harvest",
+"vegetable garden greens"
+],
+"Onions & Garlic": [
+"onions harvest sacks",
+"onion field farmer"
+],
+"Mangoes & Citrus": [
+"mango tree fruit",
+"oranges harvest",
+"citrus orchard"
+],
+"Pineapples & Bananas": [
+"pineapple plantation",
+"banana plantation bunch",
+"plantain market"
+],
+"Watermelon": [
+"watermelon harvest field",
+"watermelon market"
+],
+"Export Grade": [
+"fruit packing",
+"fruit crates",
+"mango boxes",
+"produce packaging"
+]
+},
+"produce": {
+"Yam & Cassava": [
+"yam tubers",
+"cassava flour gari",
+"yam market Nigeria"
+],
+"Palm Oil": [
+"palm oil fruit bunches",
+"oil palm plantation",
+"red palm oil"
+],
+"Honey": [
+"beekeeping hives -macro -flower",
+"honeycomb honey jar -macro -flower",
+"beekeeper Africa -macro -flower"
+],
+"Spices & Herbs": [
+"ginger roots harvest",
+"spices market Africa",
+"turmeric roots"
+],
+"Dairy Products": [
+"fresh milk dairy farm",
+"dairy cows milk churn",
+"cheese making dairy"
+],
+"Mushrooms": [
+"oyster mushroom farm -forest -wild -toadstool",
+"mushroom cultivation -forest -wild -toadstool"
+],
+"Cocoa & Cashew": [
+"cocoa pods tree",
+"cocoa beans drying",
+"cashew nuts fruit"
+]
+},
+"processing": {
+"Rice Mills": [
+"rice mill machine",
+"rice milling factory"
+],
+"Cassava Processors": [
+"cassava processing gari",
+"cassava grating machine"
+],
+"Oil Presses": [
+"palm oil press mill",
+"oil press machine seeds"
+],
+"Feed Pelletizers": [
+"pellet machine feed",
+"animal feed production"
+],
+"Packaging Lines": [
+"food packaging line factory",
+"agricultural produce packing"
+],
+"Dryers": [
+"grain drying sun",
+"solar dryer crops",
+"drying cocoa beans"
+],
+"Cold Rooms": [
+"cold storage warehouse",
+"refrigerated warehouse produce"
+]
+},
+"storage": {
+"Grain Silos": [
+"grain silos farm",
+"steel silo storage"
+],
+"Warehousing": [
+"agricultural warehouse sacks",
+"grain warehouse"
+],
+"Cold Storage": [
+"cold room vegetables",
+"cold storage fruit"
+],
+"Hermetic Bags": [
+"grain storage bags",
+"maize bags storage"
+],
+"Storage Rental": [
+"farm storage shed",
+"produce storage crates"
+],
+"Pest Control": [
+"grain storage weevil",
+"stored grain inspection"
+]
+},
+"irrigation": {
+"Drip Kits": [
+"drip irrigation vegetables",
+"drip irrigation line field"
+],
+"Sprinklers": [
+"sprinkler irrigation field",
+"farm sprinkler watering"
+],
+"Center Pivots": [
+"center pivot irrigation",
+"pivot irrigation aerial"
+],
+"Boreholes": [
+"borehole drilling rig",
+"water well drilling farm"
+],
+"Solar Pumps": [
+"solar water pump farm",
+"solar irrigation Africa"
+],
+"Pipes & Fittings": [
+"irrigation pipes field",
+"irrigation canal farm"
+]
+},
+"greenhouse": {
+"Tunnel Greenhouses": [
+"greenhouse tunnel vegetables",
+"polytunnel farm"
+],
+"Hydroponic Kits": [
+"hydroponics lettuce",
+"hydroponic farm"
+],
+"Shade Nets": [
+"shade net nursery",
+"shade house plants"
+],
+"Grow Lights": [
+"indoor farm LED lights",
+"vertical farm lights"
+],
+"Vertical Farming": [
+"vertical farming",
+"indoor vertical farm racks"
+],
+"Nursery Trays": [
+"seedling trays greenhouse",
+"nursery greenhouse seedlings"
+]
+},
+"agtech": {
+"Spraying Drones": [
+"agricultural drone spraying",
+"drone over farm field"
+],
+"Soil Sensors": [
+"soil moisture sensor",
+"smart farming sensor field"
+],
+"Farm Management Software": [
+"farmer tablet field",
+"farmer smartphone app"
+],
+"Weather Stations": [
+"weather station farm",
+"agricultural weather station"
+],
+"Solar Energy": [
+"solar farm panels agriculture",
+"solar panels rural"
+],
+"GPS & Mapping": [
+"precision agriculture tractor GPS",
+"farm aerial drone view fields"
+]
+},
+"logistics": {
+"Cold-Chain Delivery": [
+"refrigerated van delivery",
+"cold chain truck"
+],
+"Export Handling": [
+"shipping containers port",
+"container cargo terminal"
+],
+"Last-Mile Delivery": [
+"delivery motorcycle Africa",
+"delivery van produce"
+],
+"Freight Forwarding": [
+"cargo trucks highway",
+"logistics warehouse forklift"
+],
+"Customs & Docs": [
+"port container crane",
+"cargo ship containers"
+],
+"Packaging": [
+"produce crates packing",
+"cardboard boxes fruit packing"
+]
+},
+"transport": {
+"Truck Haulage": [
+"truck loaded sacks Africa",
+"cargo truck road Africa"
+],
+"Refrigerated Trucks": [
+"refrigerated truck",
+"reefer truck"
+],
+"Livestock Trucks": [
+"cattle truck transport",
+"livestock trailer"
+],
+"Tanker Services": [
+"water tanker truck",
+"milk tanker truck"
+],
+"Machinery Transport": [
+"tractor on trailer transport",
+"lowbed trailer machinery"
+],
+"Vehicle Rental": [
+"pickup truck farm",
+"farm vehicles"
+]
+},
+"advisory": {
+"Agronomy Consulting": [
+"agronomist field farmer",
+"extension officer farmers Africa"
+],
+"Farm Business Plans": [
+"farmer meeting training",
+"farmers group Africa"
+],
+"Crop Insurance": [
+"farmer handshake field",
+"farmer inspecting crop"
+],
+"Farm Loans": [
+"farmer market money Africa",
+"women farmers cooperative"
+],
+"Training Courses": [
+"agricultural training farmers",
+"farmer field school"
+],
+"Soil Testing": [
+"soil sample hand",
+"soil testing laboratory"
+]
+},
+"services": {
+"Land Clearing": [
+"bulldozer land clearing",
+"land preparation tractor"
+],
+"Farm Labour": [
+"farm workers harvesting",
+"farm workers field Africa"
+],
+"Harvesting Services": [
+"harvest workers crops",
+"harvesting maize by hand"
+],
+"Tractor Hire": [
+"tractor working field",
+"tractor harrowing"
+],
+"Forestry": [
+"timber logs forestry",
+"tree plantation forestry"
+],
+"Farm Land Lease": [
+"farmland landscape",
+"farmland aerial fields"
+]
+}
+}

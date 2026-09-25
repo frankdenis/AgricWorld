@@ -202,7 +202,8 @@
             return '<div class="dash-top"><div><h1>' + (id ? 'Edit product' : 'Add product') + '</h1><p>Clear photos and honest details sell faster.</p></div></div>' + panel(id ? esc(p.name) : 'New listing', '<form class="form" id="prodForm" novalidate>' +
               '<div class="fld full"><label>Product photos</label><div class="upload" id="upBox">' + ic('image') + '<div style="margin-top:8px"><b>Click to upload</b> or drag photos here</div><small>JPG/PNG, up to 5 MB each. First photo is the cover.</small><input type="file" id="upInput" accept="image/*" multiple class="sr"></div><div class="gal-edit" id="galEdit"></div></div>' +
               '<div class="fld full"><label>Product name</label><input name="name" required value="' + esc(p.name) + '" placeholder="e.g. Day-Old Broiler Chicks (Cobb 500)"></div>' +
-              '<div class="fld"><label>Sector</label><select name="sec">' + D.sectors.map(function (s) { return '<option value="' + s.id + '" ' + (s.id === p.sec ? 'selected' : '') + '>' + s.name + '</option>'; }).join('') + '</select></div>' +
+              '<div class="fld"><label>Sector</label><select name="sec" onchange="AW.fillSubs(this)">' + D.sectors.map(function (s) { return '<option value="' + s.id + '" ' + (s.id === p.sec ? 'selected' : '') + '>' + s.name + '</option>'; }).join('') + '</select></div>' +
+              '<div class="fld"><label>Sub-category</label><select name="sub">' + (D.secMap[p.sec] || D.sectors[0]).subs.map(function (x) { return '<option value="' + esc(x) + '" ' + (x === p.sub ? 'selected' : '') + '>' + esc(x) + '</option>'; }).join('') + '</select></div>' +
               '<div class="fld"><label>Label (optional)</label><select name="tag"><option value="">None</option>' + [['new', 'New'], ['hot', 'Bestseller'], ['sale', 'Sale'], ['premium', 'Premium']].map(function (t) { return '<option value="' + t[0] + '" ' + (p.tag === t[0] ? 'selected' : '') + '>' + t[1] + '</option>'; }).join('') + '</select></div>' +
               '<div class="fld"><label>Price (₦)</label><input name="price" type="number" min="0" step="0.01" required value="' + (p.price || '') + '"></div>' +
               '<div class="fld"><label>Unit</label><input name="unit" value="' + esc(p.unit) + '" placeholder="/kg · /bag · /chick · /ton"></div>' +
@@ -319,13 +320,14 @@
     f.addEventListener('submit', function (e) {
       e.preventDefault(); var err = $('#prodErr', root); err.textContent = '';
       var specs = {}; f.specs.value.split('\n').forEach(function (l) { var i = l.indexOf(':'); if (i > 0) specs[l.slice(0, i).trim()] = l.slice(i + 1).trim(); });
-      var v = { id: id || null, co: co.id, sec: f.sec.value, name: f.name.value.trim(), price: f.price.value, unit: f.unit.value.trim(), old: f.old.value, tag: f.tag.value, qty: f.qty.value, moq: f.moq.value, delivery: f.delivery.value.trim(), desc: f.desc.value.trim(), specs: specs, active: f.active.checked, gal: gal, img: gal[0] || '' };
+      var v = { id: id || null, co: co.id, sec: f.sec.value, sub: f.sub.value, name: f.name.value.trim(), price: f.price.value, unit: f.unit.value.trim(), old: f.old.value, tag: f.tag.value, qty: f.qty.value, moq: f.moq.value, delivery: f.delivery.value.trim(), desc: f.desc.value.trim(), specs: specs, active: f.active.checked, gal: gal, img: gal[0] || '' };
       if (v.name.length < 3) return err.textContent = 'Enter a product name'; if (!(+v.price > 0)) return err.textContent = 'Enter a price'; if (v.desc.length < 20) return err.textContent = 'Describe the product in at least 20 characters'; if (!gal.length) return err.textContent = 'Add at least one photo';
       var b = $('#prodSave', root); b.disabled = true; b.innerHTML = ic('refresh-cw') + ' Saving…';
       DB.saveProduct(v).then(function () { return DB.loadCatalogue(); }).then(function () { A.toast(id ? 'Product updated' : 'Listing published', 'check'); A.go('#/seller/products'); }).catch(function (er) { b.disabled = false; b.innerHTML = ic('check') + ' Save'; err.textContent = A.errMsg(er); });
     });
     existing.catch(function () { });
   }
+  A.fillSubs = function (sel) { var s = D.secMap[sel.value]; var out = sel.form && sel.form.sub; if (!s || !out) return; out.innerHTML = s.subs.map(function (x) { return '<option value="' + esc(x) + '">' + esc(x) + '</option>'; }).join(''); };
   function bindVerification(root, co) {
     var f = $('#verForm', root); if (!f) return; var docs = [];
     bindUpload($('#verUp', root), $('#verInput', root), function (file) { if (file.size > 5 * 1024 * 1024) return A.toast('File too large (max 5 MB)', 'circle-alert', 'err'); A.toast('Uploading…', 'upload'); var up = /^image\//.test(file.type) ? DB.uploadImage(file, 'verification') : DB.uploadImage(new File([file], file.name, { type: 'image/pdf' }), 'verification'); up.then(function (url) { docs.push(url); $('#verFiles', root).innerHTML = docs.map(function (d, i) { return '<div>' + ic('file-text') + ' Document ' + (i + 1) + '</div>'; }).join(''); }).catch(function (e) { A.toast(A.errMsg(e), 'circle-alert', 'err'); }); });
