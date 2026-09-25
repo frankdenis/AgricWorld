@@ -393,7 +393,7 @@ window.AW = (function () {
       if (!location.hash) location.hash = '#/';
       booted = true; render();
       addEventListener('hashchange', render);
-      setTimeout(function () { $('#loader').classList.add('hide'); }, Math.max(0, (reduced ? 60 : (sessionStorage.getItem('aw_seen') ? 250 : 650)) - (Date.now() - t0))); try { sessionStorage.setItem('aw_seen', '1'); } catch (e) { }
+      setTimeout(function () { $('#loader').classList.add('hide'); }, Math.max(0, (reduced ? 60 : (sessionStorage.getItem('aw_seen') ? 200 : 1050)) - (Date.now() - t0))); try { sessionStorage.setItem('aw_seen', '1'); } catch (e) { }
       registerSW();
     });
   }

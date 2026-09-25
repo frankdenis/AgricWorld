@@ -10,11 +10,12 @@
 <meta name="theme-color" content="#0f5132">
 <meta property="og:title" content="AgricWorld — Everything Agriculture. One Powerful Marketplace.">
 <meta property="og:description" content="22 agricultural sectors. Real sellers. Secure Paystack & Stripe payments. Direct contact with every business.">
-<meta property="og:image" content="assets/img/hero-main.jpg">
+<meta property="og:image" content="https://agric-world.vercel.app/assets/img/hero-main.jpg">
 <meta property="og:type" content="website">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f5132'/%3E%3Cpath d='M18 46c0-16 10-26 28-28-2 18-12 28-28 28z' fill='%2334d399'/%3E%3Cpath d='M20 44l20-20' stroke='%230f5132' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="assets/img/hero-main.jpg">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/img/hero-main.jpg" as="image">
@@ -22,17 +23,12 @@
 </head>
 <body>
 
-<!-- Leaf loading animation (no spinner) -->
+<!-- Wordmark splash (no spinner) -->
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader-inner">
-    <div class="loader-leaf">
-      <svg viewBox="0 0 64 64" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path class="leaf-fill" d="M14 50c0-18 12-30 34-32-2 22-14 34-34 32z" fill="#34d399" stroke="none"/>
-        <path d="M14 50c0-18 12-30 34-32-2 22-14 34-34 32z"/>
-        <path d="M16 48l24-24"/>
-      </svg>
-    </div>
-    <div class="loader-brand">AGRIC<em>WORLD</em></div>
+    <div class="loader-word"><span class="lw a"><i>A</i><i>G</i><i>R</i><i>I</i><i>C</i></span><span class="lw b"><i>W</i><i>O</i><i>R</i><i>L</i><i>D</i></span></div>
+    <div class="loader-rule"></div>
+    <div class="loader-tag">Everything Agriculture. One Powerful Marketplace.</div>
     <div class="loader-bar"><span></span></div>
   </div>
 </div>
@@ -43,7 +39,7 @@
   <div class="hdr-in">
     <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu"></button>
     <a href="#/" class="brand" aria-label="AgricWorld home">
-      <span class="brand-mark"><span class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></span></span>
+      <span class="brand-mark brand-word"><b>AGRIC</b><b class="g">WORLD</b></span>
       <span class="brand-txt"><span class="brand-name">AGRIC<em>WORLD</em></span><span class="brand-sub">Digital Agri Ecosystem</span></span>
     </a>
     <nav class="nav" id="nav" aria-label="Primary"></nav>
