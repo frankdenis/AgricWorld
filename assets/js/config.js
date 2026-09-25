@@ -29,6 +29,12 @@ window.AW_CONFIG = {
   stripeCheckoutEndpoint: '/api/stripe-checkout',
   stripeVerifyEndpoint: '/api/stripe-verify',
 
+  /* ── AgricWorld AI ──
+     The assistant always answers from the live catalogue in the browser. To let a
+     language model write the replies, add AI_API_KEY (and optionally AI_MODEL,
+     AI_BASE_URL) to Vercel env vars — api/ai.js detects it automatically. */
+  aiEndpoint: '/api/ai',
+
   /* ── Real contact channels (order requests, enquiries, support) ── */
   whatsapp: '2349126480004',          /* international format, digits only */
   phoneDisplay: '+234 912 648 0004',

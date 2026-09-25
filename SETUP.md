@@ -94,3 +94,17 @@ To add another owner email, edit `owner_emails()` in `schema.sql` and re-run jus
 The browser never marks an order paid. After Paystack reports success, the site calls `/api/paystack-verify`, which asks Paystack's API (with your secret key) whether that reference is a **successful charge for exactly the order total in NGN**, and only then updates the order using the service-role key. A database trigger blocks any other path to `status = 'paid'`.
 
 Stripe works the same way twice over: the amount is read from the database (never from the browser) when `/api/stripe-checkout` creates the hosted session; on return `/api/stripe-verify` retrieves the session with your secret key and checks *paid · same order · same amount · same currency*; and `/api/stripe-webhook` (signature-verified) settles the order even if the buyer never comes back.
+
+
+## Optional: AgricWorld AI language model
+
+The AI concierge works out of the box from the catalogue. To have a language model write its
+replies, add to Vercel → Settings → Environment Variables:
+
+| Variable | Value |
+|---|---|
+| `AI_API_KEY` | your provider key (OpenAI `sk-…`, Groq `gsk_…`, OpenRouter, DeepSeek …) |
+| `AI_MODEL` | optional, default `gpt-4o-mini` (e.g. `llama-3.3-70b-versatile` on Groq) |
+| `AI_BASE_URL` | optional, default `https://api.openai.com/v1` (e.g. `https://api.groq.com/openai/v1`) |
+
+Redeploy; the assistant header changes to “Language model + N live listings”.

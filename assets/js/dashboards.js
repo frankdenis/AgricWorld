@@ -57,6 +57,7 @@
   function kpi(label, val, icon, color, prefix, suffix, dec) {
     return '<div class="kpi glass rv" style="--c:' + color + '"><span class="ic">' + ic(icon) + '</span><small>' + label + '</small><b data-count="' + (val || 0) + '" data-prefix="' + (prefix || '') + '" data-suffix="' + (suffix || '') + '" ' + (dec ? 'data-dec="' + dec + '"' : '') + '>' + (prefix || '') + '0' + (suffix || '') + '</b></div>';
   }
+  function withAI(html, role, sub) { if (sub || !A.aiDashWidget) return html; var w = A.aiDashWidget(role), i = html.indexOf('<div class="kpis">'); return i > -1 ? html.slice(0, i) + w + html.slice(i) : html + w; }
   function panel(title, body, extra, cls) { return '<div class="panel glass rv ' + (cls || '') + '"><div class="panel-h"><h3>' + title + '</h3>' + (extra || '') + '</div>' + body + '</div>'; }
   var STATUS = { pending_payment: ['pend', 'Awaiting payment'], requested: ['info', 'Requested'], paid: ['ok', 'Paid'], processing: ['info', 'Processing'], shipped: ['ship', 'Shipped'], delivered: ['ok', 'Delivered'], cancelled: ['bad', 'Cancelled'], refunded: ['bad', 'Refunded'] };
   function pill(s) { var m = STATUS[s] || ['info', s]; return '<span class="pill ' + m[0] + '">' + m[1] + '</span>'; }
@@ -105,7 +106,7 @@
     function ordersTable(list, full) {
       return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead><tbody>' + list.map(function (o, i) { return '<tr style="--i:' + i + '"><td><b>' + esc(o.ref) + '</b>' + (full ? '<br><small style="color:var(--text-3)">' + esc(o.ship_option || '') + '</small>' : '') + '</td><td>' + orderItemsHtml(o.order_items) + '</td><td><b>' + money(o.total) + '</b></td><td>' + (o.method === 'paystack' ? ic('credit-card') + ' Paystack' : o.method === 'stripe' ? ic('globe') + ' Stripe' : ic('hand-coins') + ' Direct') + '</td><td>' + pill(o.status) + '</td><td style="color:var(--text-3)">' + fmtDate(o.created_at) + '</td></tr>'; }).join('') + '</tbody></table></div>';
     }
-    (views[sub] || views[''])().then(function (html) { body.innerHTML = html; A.observe(body); if (sub === 'messages') initChat(body, { asSeller: null, co: r.q.co, p: r.q.p }); if (sub === 'profile') bindProfile(body, u); }).catch(function (e) { fail(body, e); });
+    (views[sub] || views[''])().then(function (html) { body.innerHTML = withAI(html, 'buyer', sub); A.observe(body); if (sub === 'messages') initChat(body, { asSeller: null, co: r.q.co, p: r.q.p }); if (sub === 'profile') bindProfile(body, u); }).catch(function (e) { fail(body, e); });
   });
 
   function profileView(u) {
@@ -265,7 +266,7 @@
       var vfn = views[sub] || views[''];
       vfn().then(function (res) {
         var html = typeof res === 'string' ? res : res.html;
-        body.innerHTML = html; A.observe(body);
+        body.innerHTML = withAI(html, 'seller', sub); A.observe(body);
         if (sub === 'messages') initChat(body, { asSeller: co.id });
         if (sub === 'profile') bindCompanyForm(body, co, function () { A.render(); });
         if (sub === 'add') bindProductForm(body, co, res.id);
@@ -363,7 +364,7 @@
         '<div class="dgrid">' + panel('Listings by sector', bySec.length ? barChart([{ data: bySec.map(function (x) { return x.v; }), color: '#34d399' }], { labels: bySec.map(function (x) { return x.name.split(' ')[0]; }) }) : empty('package', 'No listings yet')) +
         panel('Private to the owner', '<div class="plist">' + [['badge-check', 'Verification requests'], ['receipt-text', 'Orders & payments'], ['users', 'Users & roles'], ['mail', 'Contact inbox']].map(function (q) { return '<div class="it glass" style="display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;opacity:.75"><span class="ic" style="width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(148,163,184,.15);color:#94a3b8">' + ic(q[0]) + '</span><b style="flex:1">' + q[1] + '</b>' + ic('lock') + '</div>'; }).join('') + '</div>') + '</div>';
     }
-    body.innerHTML = html; A.observe(body);
+    body.innerHTML = withAI(html, 'admin', ''); A.observe(body);
   }
 
   /* ════════ ADMIN CONSOLE (owner only) ════════ */
@@ -395,7 +396,7 @@
       subscribers: function () { return AD.subscribers().then(function (list) { return '<div class="dash-top"><div><h1>Subscribers</h1><p>' + list.length + ' newsletter sign-ups</p></div><button class="btn btn-ghost btn-sm" id="csvBtn">' + ic('download') + ' Download CSV</button></div>' + panel('Emails', list.length ? '<div class="tbl-wrap"><table class="tbl"><tbody>' + list.map(function (s, i) { return '<tr style="--i:' + Math.min(i, 10) + '"><td>' + esc(s.email) + '</td><td style="color:var(--text-3);text-align:right">' + fmtDate(s.created_at) + '</td></tr>'; }).join('') + '</tbody></table></div>' : empty('send', 'No subscribers yet')); }); }
     };
     (views[sub] || views[''])().then(function (html) {
-      body.innerHTML = html; A.observe(body);
+      body.innerHTML = withAI(html, 'admin', sub); A.observe(body);
       var csv = $('#csvBtn', body); if (csv) csv.addEventListener('click', function () { AD.subscribers().then(function (list) { var blob = new Blob(['email,subscribed\n' + list.map(function (s) { return s.email + ',' + s.created_at; }).join('\n')], { type: 'text/csv' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'agricworld-subscribers.csv'; a.click(); }); });
       var act = function (p, msg) { p.then(function () { A.toast(msg, 'check'); return DB.loadCatalogue(); }).then(function () { A.render(); }).catch(function (e) { A.toast(A.errMsg(e), 'circle-alert', 'err'); }); };
       body.addEventListener('click', function (e) {

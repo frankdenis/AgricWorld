@@ -158,7 +158,9 @@ for s in sectors:
             for (label, vprice) in variants:
                 pname = (name if not label else name + ' ' + label).replace('  ', ' ').strip()
                 n_off = 1 + (1 if random.random() < 0.55 else 0) + (1 if random.random() < 0.18 else 0)
-                for o in range(n_off): offers_list.append((pname, unit, vprice, moq, delivery, desc, specs, o))
+                # bulk variants (truckload / 600 bags / 500 pcs…) are priced per lot, not per bag
+                v_unit, v_moq = (('/lot', 1) if label and vprice >= price * 20 else (unit, moq))
+                for o in range(n_off): offers_list.append((pname, v_unit, vprice, v_moq, delivery, desc, specs, o))
         n = len(offers_list)
         primaries = photos[:n]; extras = photos[n:] or photos
         rr_extra = RoundRobin(extras)

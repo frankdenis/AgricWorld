@@ -19,3 +19,14 @@ SUPABASE_SERVICE_ROLE_KEY  = eyJ…  (Project Settings → API → service_role)
 ```
 
 None of these ever appear in the browser. Without them the endpoint returns `503` and checkout shows a clear "payments not configured" message instead of a fake confirmation.
+
+
+## `ai.js` — AgricWorld AI (optional language model)
+
+`GET /api/ai` → `{ configured: true|false }` · `POST /api/ai { messages, context }` → `{ ok, reply }`
+
+The assistant in the browser (`assets/js/ai.js`) always answers from the live catalogue. When
+`AI_API_KEY` is set in Vercel (plus optional `AI_MODEL`, default `gpt-4o-mini`, and `AI_BASE_URL`
+for any OpenAI-compatible provider such as OpenAI, Groq, Together, OpenRouter or DeepSeek) the reply
+text is written by the model, which receives the matching listings as context and is instructed to
+answer only from them. No key → `503` and the built-in engine keeps answering.
