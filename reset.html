@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Refreshing AgricWorld…</title>
+<meta http-equiv="Cache-Control" content="no-store">
+<style>html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#06241a,#0f5132);color:#fff;display:grid;place-items:center;text-align:center}
+b{display:block;font-size:2rem;letter-spacing:.06em}b span{color:#4ade80}p{opacity:.8;margin:14px 0 0;font-size:.95rem}</style></head>
+<body><div><b>AGRIC<span>WORLD</span></b><p id="m">Clearing the old cached version…</p></div>
+<script>
+(function(){
+  var done=false;function go(){if(done)return;done=true;location.replace('/?fresh='+Date.now()+'#/');}
+  var steps=[];
+  if('serviceWorker' in navigator){steps.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}).catch(function(){}));}
+  if(window.caches){steps.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){}));}
+  Promise.all(steps).then(function(){document.getElementById('m').textContent='Done — loading the latest AgricWorld…';setTimeout(go,400);});
+  setTimeout(go,4000);
+})();
+</script></body></html>
