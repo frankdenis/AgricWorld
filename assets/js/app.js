@@ -387,13 +387,15 @@ window.AW = (function () {
   function registerSW() {
     if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
     if (location.hostname !== 'localhost' && location.protocol !== 'https:') return;
-    var told = false;
-    navigator.serviceWorker.addEventListener('message', function (ev) { if (ev.data && ev.data.type === 'aw-update' && !told) { told = true; toast('A newer version is ready — reload to update', 'refresh-cw'); } });
+    var told = false, hadController = !!navigator.serviceWorker.controller;
+    function refreshNow() { if (told) return; told = true; if (/#\/(checkout|pay)/.test(location.hash)) { toast('A newer version is ready — reload after checkout', 'refresh-cw'); return; } toast('Updating to the latest AgricWorld…', 'refresh-cw'); setTimeout(function () { location.reload(); }, 600); }
+    navigator.serviceWorker.addEventListener('message', function (ev) { if (ev.data && ev.data.type === 'aw-update' && hadController) refreshNow(); });
+    navigator.serviceWorker.addEventListener('controllerchange', function () { if (hadController) refreshNow(); });
     navigator.serviceWorker.register('sw.js').then(function (reg) {
       reg.addEventListener('updatefound', function () {
         var nw = reg.installing; if (!nw) return;
         nw.addEventListener('statechange', function () {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller && !told) { told = true; toast('A newer version is ready — reload to update', 'refresh-cw'); }
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) refreshNow();
         });
       });
     }).catch(function () { });
