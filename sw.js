@@ -2,7 +2,7 @@
    images/fonts: cache-first (they are immutable); html/css/js/data: network-first with a short
    timeout, falling back to the cached copy when offline or slow — so a new deployment is visible
    on the very next load, never a stale one. */
-var VERSION = 'aw-v7';
+var VERSION = 'aw-v8';
 var NET_TIMEOUT = 3500;
 var SHELL = ['./', 'assets/css/app.css', 'assets/js/icons.js', 'assets/js/vendor/supabase.js', 'assets/js/config.js', 'assets/js/data.js', 'assets/js/db.js', 'assets/js/app.js', 'assets/js/pages.js', 'assets/js/ai.js', 'assets/js/dashboards.js', 'assets/fonts/jakarta.woff2', 'assets/fonts/manrope.woff2'];
 
